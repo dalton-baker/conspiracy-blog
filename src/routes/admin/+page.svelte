@@ -4,9 +4,14 @@
   let imagePreview = '';
   let status = '';
 
-  function handleImageChange(e) {
-    imageFile = e.target.files?.[0];
-    if (imageFile) imagePreview = URL.createObjectURL(imageFile);
+  async function handleImageChange(e) {
+    const original = e.target.files?.[0];
+    if (!original) return;
+
+    // Convert to WebP immediately
+    const converted = await convertToWebP(original);
+    imageFile = converted;
+    imagePreview = URL.createObjectURL(converted);
   }
 
   async function submit() {
@@ -27,6 +32,34 @@
       console.error(err);
       status = `❌ ${err.message}`;
     }
+  }
+
+  async function convertToWebP(file, maxWidth = 1200, quality = 0.9) {
+    const img = new Image();
+    img.src = URL.createObjectURL(file);
+    await img.decode();
+
+    // Optional resize logic
+    const scale = Math.min(1, maxWidth / img.width);
+    const width = img.width * scale;
+    const height = img.height * scale;
+
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, width, height);
+
+    const blob = await new Promise(resolve =>
+      canvas.toBlob(resolve, 'image/webp', quality)
+    );
+
+    // Generate new file name and return a File object
+    const newFile = new File([blob], file.name.replace(/\.[^.]+$/, '.webp'), {
+      type: 'image/webp'
+    });
+
+    return newFile;
   }
 </script>
 

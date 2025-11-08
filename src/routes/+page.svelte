@@ -1,58 +1,54 @@
 <script>
-	import moon_real_estate_image from '$lib/assets/articles/moon-real-estate.jpg';
-	import empire_state_building_image from '$lib/assets/articles/empire-state-building.jpg';
-	import spooky_solid_image from '$lib/assets/articles/spooky-solid.jpg';
+    import { onMount } from 'svelte';
+
+    let error = '';
+    let loading = true;
+    let articles = null;
+
+    onMount(async () => {
+        try {
+            const res = await fetch('https://truth-data.dalt.dev/summaries.json');
+            if (!res.ok){
+                error = 'Failed to load articles.';
+            }else{
+                articles = await res.json();
+            }
+        } catch (err) {
+            console.error(err);
+            error = 'Failed to load article.';
+        } finally {
+            loading = false;
+        }
+    });
 </script>
 
 <h1 class="mb-5 text-center display-5 fw-bold">Wake Up Sheeple</h1>
-<div class="row g-4">
-    <div class="col-md-6 col-lg-4">
-        <div class="card h-100 bg-secondary text-light border-light shadow-sm">
-            <img src="{spooky_solid_image}" class="card-img-top"
-                alt="The Moon is Actually Rental Property">
-            <div class="card-body d-flex flex-column">
-                <h5 class="card-title">Spooky SOLID Principles</h5>
-                <p class="card-text flex-grow-1">Programming wisdom from the depths of the unknown...</p>
-                <div class="mt-3">
-                    <small class="text-warning">October 2025</small><br>
-                    <a href="articles/spooky-solid"
-                        class="btn btn-outline-light btn-sm mt-2 stretched-link">Read More</a>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <div class="col-md-6 col-lg-4">
-        <div class="card h-100 bg-secondary text-light border-light shadow-sm">
-            <img src="{empire_state_building_image}" class="card-img-top"
-                alt="The Moon is Actually Rental Property">
-            <div class="card-body d-flex flex-column">
-                <h5 class="card-title">The Empire State Building Grew Again</h5>
-                <p class="card-text flex-grow-1">The building reportedly grew 34 feet this past week, breaking a
-                    562 week streak of no growth.</p>
-                <div class="mt-3">
-                    <small class="text-warning">September 2025</small><br>
-                    <a href="articles/empire-state-building"
-                        class="btn btn-outline-light btn-sm mt-2 stretched-link">Read More</a>
+{#if loading}
+    <div class="container bg-dark text-light p-4 rounded mt-5 shadow-lg">
+        <div class="p-5 text-center text-secondary">Loading...</div>
+    </div>
+{:else if error}
+    <div class="container bg-dark text-light p-4 rounded mt-5 shadow-lg">
+        <div class="p-5 text-danger text-center">{error}</div>
+    </div>
+{:else}
+    <div class="row g-4">
+        {#each articles as article}
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 bg-secondary text-light border-light shadow-sm">
+                    <img src="https://truth-data.dalt.dev/images/{article.id}.webp" class="card-img-top"
+                        alt="The Moon is Actually Rental Property">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{article.title}</h5>
+                        <p class="card-text flex-grow-1">{article.summary}</p>
+                        <div class="mt-3">
+                            <small class="text-warning">{article.date}</small><br>
+                            <a href="{`article?id=${article.id}`}" class="btn btn-outline-light btn-sm mt-2 stretched-link">Read More</a>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+        {/each}
     </div>
-
-    <div class="col-md-6 col-lg-4">
-        <div class="card h-100 bg-secondary text-light border-light shadow-sm">
-            <img src="{moon_real_estate_image}" class="card-img-top"
-                alt="The Moon is Actually Rental Property">
-            <div class="card-body d-flex flex-column">
-                <h5 class="card-title">The Moon is Actually Rental Property</h5>
-                <p class="card-text flex-grow-1">NASA’s biggest secret? The Moon’s owned by billionaires leasing
-                    it out to aliens...</p>
-                <div class="mt-3">
-                    <small class="text-warning">May 2025</small><br>
-                    <a href="articles/moon-real-estate"
-                        class="btn btn-outline-light btn-sm mt-2 stretched-link">Read More</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+{/if}

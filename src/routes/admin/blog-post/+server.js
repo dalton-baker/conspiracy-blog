@@ -12,26 +12,22 @@ export async function POST({ request, platform }) {
     const r2 = platform.env.BLOG_BUCKET;
     const id = crypto.randomUUID().replace(/-/g, '');
     const date = new Date().toISOString().split('T')[0];
-    let imageUrl = '';
 
-    // Optional: handle image upload if present
+    // Handle image upload (WebP only)
     if (image instanceof File) {
-        if (!image.type.startsWith('image/')) {
-            return new Response('Invalid image type', { status: 400 });
+        if (image.type !== 'image/webp') {
+            return new Response('Only WebP images are allowed', { status: 400 });
         }
 
-        const ext = image.type.split('/').pop() || 'bin';
-        const key = `images/${id}.${ext}`;
+        const key = `images/${id}.webp`;
 
         await r2.put(key, await image.arrayBuffer(), {
-            httpMetadata: { contentType: image.type }
+            httpMetadata: { contentType: 'image/webp' }
         });
-
-        imageUrl = `https://truth-data.dalt.dev/${key}`;
     }
 
     // Create article object
-    const article = { id, title, date, content, image: imageUrl };
+    const article = { title, date, content };
 
     // Save full article
     await r2.put(`articles/${id}.json`, JSON.stringify(article, null, 2), {
@@ -42,11 +38,11 @@ export async function POST({ request, platform }) {
     const summariesFile = await r2.get('summaries.json');
     const summaries = summariesFile ? await summariesFile.json() : [];
 
-    summaries.unshift({ id, title, summary, image: imageUrl, date });
+    summaries.unshift({ id, title, summary, date });
 
     await r2.put('summaries.json', JSON.stringify(summaries, null, 2), {
         httpMetadata: { contentType: 'application/json' }
     });
 
-    return json({ ok: true, id, image: imageUrl });
+    return json({ ok: true, id });
 }
