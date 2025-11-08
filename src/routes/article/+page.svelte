@@ -72,13 +72,9 @@
 
 
 {#if loading}
-    <div class="container bg-dark text-light p-4 rounded mt-5 shadow-lg">
-        <div class="p-5 text-center text-secondary">Loading...</div>
-    </div>
+    <div class="p-5 text-center text-secondary">Loading...</div>
 {:else if error}
-    <div class="container bg-dark text-light p-4 rounded mt-5 shadow-lg">
-        <div class="p-5 text-danger text-center">{error}</div>
-    </div>
+    <div class="p-5 text-danger text-center">{error}</div>
 {:else}
     <div class="container my-4">
         <div class="article-hero">

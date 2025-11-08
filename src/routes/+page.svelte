@@ -27,13 +27,9 @@
 <h1 class="mb-5 text-center display-5 fw-bold">Wake Up Sheeple</h1>
 
 {#if loading}
-    <div class="container bg-dark text-light p-4 rounded mt-5 shadow-lg">
-        <div class="p-5 text-center text-secondary">Loading...</div>
-    </div>
+    <div class="p-5 text-center text-secondary">Loading...</div>
 {:else if error}
-    <div class="container bg-dark text-light p-4 rounded mt-5 shadow-lg">
-        <div class="p-5 text-danger text-center">{error}</div>
-    </div>
+    <div class="p-5 text-danger text-center">{error}</div>
 {:else}
     <div class="row g-4">
         {#each articles as article}
