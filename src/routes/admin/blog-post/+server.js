@@ -1,38 +1,52 @@
 import { json } from '@sveltejs/kit';
 
-export const prerender = false;
-
 export async function POST({ request, platform }) {
-    console.log(platform)
-    const { title, summary, content, image } = await request.json();
+    const form = await request.formData();
+
+    // Extract fields
+    const title = form.get('title')?.toString() || '';
+    const summary = form.get('summary')?.toString() || '';
+    const content = form.get('content')?.toString() || '';
+    const image = form.get('image'); // <== the File object
+
     const r2 = platform.env.BLOG_BUCKET;
-
-    // Generate a random UUID for this article
-    const id = crypto.randomUUID();
-
+    const id = crypto.randomUUID().replace(/-/g, '');
     const date = new Date().toISOString().split('T')[0];
+    let imageUrl = '';
 
-    // 1️⃣ Save full article
-    const article = { id, title, date, content };
+    // Optional: handle image upload if present
+    if (image instanceof File) {
+        if (!image.type.startsWith('image/')) {
+            return new Response('Invalid image type', { status: 400 });
+        }
+
+        const ext = image.type.split('/').pop() || 'bin';
+        const key = `images/${id}.${ext}`;
+
+        await r2.put(key, await image.arrayBuffer(), {
+            httpMetadata: { contentType: image.type }
+        });
+
+        imageUrl = `https://truth-data.dalt.dev/${key}`;
+    }
+
+    // Create article object
+    const article = { id, title, date, content, image: imageUrl };
+
+    // Save full article
     await r2.put(`articles/${id}.json`, JSON.stringify(article, null, 2), {
         httpMetadata: { contentType: 'application/json' }
     });
 
-    // 2️⃣ Update summaries
+    // Update summaries
     const summariesFile = await r2.get('summaries.json');
     const summaries = summariesFile ? await summariesFile.json() : [];
 
-    summaries.unshift({
-        id,
-        title,
-        summary,
-        image,
-        date
-    });
+    summaries.unshift({ id, title, summary, image: imageUrl, date });
 
     await r2.put('summaries.json', JSON.stringify(summaries, null, 2), {
         httpMetadata: { contentType: 'application/json' }
     });
 
-    return json({ ok: true, id });
+    return json({ ok: true, id, image: imageUrl });
 }

@@ -8,13 +8,7 @@ const config = {
 		// See https://svelte.dev/docs/kit/adapters for more information about adapters.
 		adapter: adapter(),
 		prerender: {
-			entries: ['*'],
-			//handleHttpError: 'warn'
-			// handleHttpError: (details) => {
-			// 	console.log("##########################################################");
-			// 	console.log(details);
-			// 	throw new Error(message);
-			// }
+			entries: ['*']
 		}
 	}
 };
