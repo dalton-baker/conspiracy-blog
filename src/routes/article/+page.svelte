@@ -37,6 +37,7 @@
 <script>
     import { page } from '$app/stores';
     import { onMount } from 'svelte';
+    import { formatDate } from '$lib';
 
     let article = null;
     let error = '';
@@ -59,11 +60,6 @@
                 error = 'Failed to load article.';
             }else{
                 article = await res.json();
-                article.date = new Date(article.date).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                });
             }
         } catch (err) {
             console.error(err);
@@ -89,7 +85,7 @@
             <img src="https://truth-data.dalt.dev/images/{articleId}.webp" alt="Elite Lookiong at moon model">
             <div class="overlay text-light">
                 <h2 class="fw-bold">{article.title}</h2>
-                <p class="mb-0">{article.date}</p>
+                <p class="mb-0">{formatDate(article.date)}</p>
             </div>
         </div>
     </div>

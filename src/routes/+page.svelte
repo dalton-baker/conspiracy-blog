@@ -1,5 +1,6 @@
 <script>
     import { onMount } from 'svelte';
+    import { formatDate } from '$lib';
 
     let error = '';
     let loading = true;
@@ -12,11 +13,7 @@
                 error = 'Failed to load articles.';
             }else{
                 articles = await res.json();
-                articles = articles.map(p => ({
-                    ...p,
-                    date: new Date(p.date)
-                }));
-                articles.sort((a, b) => new Date(b.date) - new Date(a.date));
+                articles.sort((a, b) => b.date.localeCompare(a.date));
             }
         } catch (err) {
             console.error(err);
@@ -25,14 +22,6 @@
             loading = false;
         }
     });
-
-    function formatDate(date) {
-        return date.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        });
-    }
 </script>
 
 <h1 class="mb-5 text-center display-5 fw-bold">Wake Up Sheeple</h1>
