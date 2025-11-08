@@ -34,3 +34,5 @@ export async function POST({ request, platform }) {
 
     return json({ ok: true, id });
 }
+
+export const prerender = false;
