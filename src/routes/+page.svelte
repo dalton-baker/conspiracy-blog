@@ -12,6 +12,11 @@
                 error = 'Failed to load articles.';
             }else{
                 articles = await res.json();
+                articles = articles.map(p => ({
+                    ...p,
+                    date: new Date(p.date)
+                }));
+                articles.sort((a, b) => new Date(b.date) - new Date(a.date));
             }
         } catch (err) {
             console.error(err);
@@ -20,6 +25,14 @@
             loading = false;
         }
     });
+
+    function formatDate(date) {
+        return date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    }
 </script>
 
 <h1 class="mb-5 text-center display-5 fw-bold">Wake Up Sheeple</h1>
@@ -43,7 +56,7 @@
                         <h5 class="card-title">{article.title}</h5>
                         <p class="card-text flex-grow-1">{article.summary}</p>
                         <div class="mt-3">
-                            <small class="text-warning">{article.date}</small><br>
+                            <small class="text-warning">{formatDate(article.date)}</small><br>
                             <a href="{`article?id=${article.id}`}" class="btn btn-outline-light btn-sm mt-2 stretched-link">Read More</a>
                         </div>
                     </div>

@@ -56,9 +56,14 @@
         try {
             const res = await fetch(`${baseUrl}/${articleId}.json`);
             if (!res.ok){
-            error = 'Failed to load article.';
+                error = 'Failed to load article.';
             }else{
-            article = await res.json();
+                article = await res.json();
+                article.date = new Date(article.date).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
             }
         } catch (err) {
             console.error(err);
