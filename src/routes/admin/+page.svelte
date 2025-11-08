@@ -6,7 +6,7 @@
   let status = '';
 
   async function submit() {
-    const res = await fetch('/admin', {
+    const res = await fetch('/admin/log-post', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ title, summary, content, image })

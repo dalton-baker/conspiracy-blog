@@ -9,7 +9,7 @@ const config = {
 		adapter: adapter(),
 		prerender: {
 			entries: ['*'],
-			handleHttpError: 'warn'
+			//handleHttpError: 'warn'
 			// handleHttpError: (details) => {
 			// 	console.log("##########################################################");
 			// 	console.log(details);

@@ -1,5 +1,7 @@
 import { json } from '@sveltejs/kit';
 
+export const prerender = false;
+
 export async function POST({ request, platform }) {
     console.log(platform)
     const { title, summary, content, image } = await request.json();
@@ -34,5 +36,3 @@ export async function POST({ request, platform }) {
 
     return json({ ok: true, id });
 }
-
-export const prerender = false;
