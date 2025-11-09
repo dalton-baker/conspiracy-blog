@@ -22,6 +22,12 @@
 			"binding": "BLOG_BUCKET",
 			"bucket_name": "conspiracy-bucket"
 		},
+	],
+	"kv_namespaces": [
+		{
+			"binding": "FORUM_KV",
+			"id": "conspiracy-forum"
+		}
 	]
 	/**
 	 * Smart Placement
