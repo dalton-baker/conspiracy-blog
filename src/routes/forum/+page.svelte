@@ -116,6 +116,7 @@
 						Posted by <span class="text-info">{post.username}</span> on
 						{new Date(post.created).toLocaleString()}
 					</small>
+                    <a href="/forum/post?id={post.id}">view</a>
 				</li>
 			{/each}
 		</ul>

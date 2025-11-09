@@ -55,7 +55,7 @@ export async function POST({ request, platform }) {
         created
     };
 
-    await kv.put(`post:${id}`, JSON.stringify(post));
+    await kv.put(`post:${username}:${id}`, JSON.stringify(post));
 
     return json(post);
 }
