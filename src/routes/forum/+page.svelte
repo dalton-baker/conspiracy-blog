@@ -246,7 +246,4 @@
 		color: var(--bs-info);
 		border-color: var(--bs-info);
 	}
-	.markdown-preview {
-		line-height: 1.5;
-	}
 </style>

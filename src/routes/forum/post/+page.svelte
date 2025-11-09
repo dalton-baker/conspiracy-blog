@@ -12,6 +12,7 @@
     let commentText = '';
 	let submitting = false;
 	let commentError = '';
+	let preview = false;
 
     onMount(async () => {
         postId = $page.url.searchParams.get('id');
@@ -89,7 +90,7 @@
 				<div class="d-flex flex-column gap-3">
 					{#each post.comments as comment}
 						<div class="ps-3 border-start border-3 border-secondary">
-							<p class="mb-1 text-light">{comment.body}</p>
+							<p class="mb-1 text-light">{@html renderMarkdown(comment.body)}</p>
 
                             <small class="text-secondary">
                                 <span class="fw-semibold" style="color: {colorForUser(comment.username)}">
@@ -108,18 +109,45 @@
 		<!-- New Comment Form -->
 		<section class="pt-3">
 			<h6 class="fw-semibold mb-3">Add a comment</h6>
-			<form onsumit={submitComment}>
-				<div class="mb-3">
+			<form onsubmit={submitComment}>
+				<div class="d-flex justify-content-between align-items-center mb-2">
+					<small class="text-secondary">
+						Supports
+						<a
+							href="https://guides.github.com/features/mastering-markdown/"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="link-info">
+							GitHub Markdown
+						</a>
+					</small>
+
+					<button
+						type="button"
+						class="btn btn-sm btn-outline-info"
+						onclick={() => (preview = !preview)}>
+						{preview ? 'Edit' : 'Preview'}
+					</button>
+				</div>
+
+				{#if !preview}
 					<textarea
 						bind:value={commentText}
 						class="form-control bg-dark text-light border-secondary"
 						rows="3"
 						placeholder="Write something insightful..."
-						required
-					></textarea>
-				</div>
-				<div class="d-flex justify-content-end">
-					<button class="btn btn-info text-dark fw-semibold" disabled={submitting}>
+						required></textarea>
+				{:else}
+					<div class="text-light" style="min-height: 4rem;">
+						{@html renderMarkdown(commentText || '_Nothing to preview yet..._')}
+					</div>
+				{/if}
+
+				<div class="d-flex justify-content-end mt-3">
+					<button
+						type="submit"
+						class="btn btn-info text-dark fw-semibold"
+						disabled={submitting}>
 						{#if submitting}
 							<span class="spinner-border spinner-border-sm me-2"></span> Posting...
 						{:else}
@@ -127,6 +155,7 @@
 						{/if}
 					</button>
 				</div>
+
 				{#if commentError}
 					<div class="alert alert-danger mt-3 py-2">{commentError}</div>
 				{/if}
