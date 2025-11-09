@@ -75,7 +75,7 @@
 		<article class="mb-5">
 			<h2 class="fw-bold mb-2">{post.title}</h2>
 			<div class="d-flex flex-wrap align-items-center text-secondary small mb-3 border-bottom border-secondary pb-2">
-				<span class="me-2 fw-semibold" style="color: {colorForUser(comment.username)}">{post.username}</span>
+				<span class="me-2 fw-semibold" style="color: {colorForUser(post.username)}">{post.username}</span>
 				<span>• {new Date(post.created).toLocaleString()}</span>
 			</div>
 			<p class="fs-5 lh-base text-light">{post.body}</p>
