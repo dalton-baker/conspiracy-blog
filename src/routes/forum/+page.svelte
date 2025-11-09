@@ -16,6 +16,7 @@
 	let body = '';
 	let posting = false;
 	let postError = '';
+	let activeTab = 'write';
 
 	onMount(async () => {
 		await loadPosts();
