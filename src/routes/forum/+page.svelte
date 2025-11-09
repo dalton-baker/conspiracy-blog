@@ -81,21 +81,18 @@
 </script>
 
 <div class="container py-4 text-light">
-	<!-- Welcome Banner -->
-	<div class="mb-4 p-4 bg-gradient rounded-3 shadow d-flex justify-content-between align-items-center border border-secondary"
-		style="background: linear-gradient(135deg, #1a1a1a, #222);">
+
+	<div class="d-flex justify-content-between align-items-center mb-5">
 		<div>
-			<h4 class="mb-0">
-				Welcome, <span class="text-info fw-semibold">{forumState.username}</span>!
-			</h4>
-			<p class="text-secondary mb-0">Check out what’s new in the forum.</p>
+			<h3 class="fw-semibold mb-1">Welcome, <span class="text-info">{forumState.username}</span></h3>
+			<p class="text-secondary mb-0">Here’s what’s buzzing on the forum.</p>
 		</div>
-		<button class="btn btn-info text-dark fw-semibold shadow-sm" on:click={openModal}>
-			<i class="bi bi-plus-lg me-1"></i> New Post
+		<button class="btn btn-outline-info fw-semibold" onclick={openModal}>
+			New Post
 		</button>
 	</div>
 
-	<!-- Posts List -->
+	<!-- Posts Section -->
 	{#if loading}
 		<div class="text-center py-5">
 			<div class="spinner-border text-info" role="status">
@@ -109,27 +106,25 @@
 			No posts yet. Be the first to start a discussion!
 		</div>
 	{:else}
-		<div class="d-flex flex-column gap-3">
-			{#each posts as post}
-				<a href="/forum/post?id={post.id}" class="text-decoration-none">
-					<div class="p-3 rounded-3 shadow-sm border border-secondary bg-dark-subtle text-light
-						hover-shadow-sm transition" 
-						style="background: linear-gradient(145deg, #2a2a2a, #1f1f1f); transition: all 0.2s ease;">
-						<h5 class="mb-1 text-info">{post.title}</h5>
-						<small class="text-secondary d-block mb-2">
-							Posted by <span class="text-light">{post.username}</span> • {new Date(post.created).toLocaleString()}
+		<div class="d-flex flex-column gap-0">
+			{#each posts as post, i}
+				<a href="/forum/post?id={post.id}" class="text-decoration-none text-light">
+					<div class="py-3 px-2 border-start border-3 border-transparent post-hover">
+						<h5 class="fw-semibold mb-1">{post.title}</h5>
+						<small class="text-secondary">
+							{post.username} • {new Date(post.created).toLocaleString()}
 						</small>
-						<div class="text-end">
-							<span class="badge bg-secondary text-light">View Discussion →</span>
-						</div>
 					</div>
 				</a>
+
+				{#if i < posts.length - 1}
+					<hr class="text-secondary opacity-25 my-0" />
+				{/if}
 			{/each}
 		</div>
 	{/if}
 </div>
 
-<!-- New Post Modal -->
 <div class="modal fade"
 	bind:this={modalEl}
 	tabindex="-1"
@@ -143,19 +138,21 @@
 				<h5 class="modal-title" id="newPostLabel">Create New Post</h5>
 			</div>
 			<div class="modal-body">
-				<form on:submit|preventDefault={createPost}>
+				<form onsubmit={createPost}>
 					<div class="mb-3">
-						<label class="form-label fw-semibold">Title</label>
+						<label for="title" class="form-label fw-semibold">Title</label>
 						<input
 							bind:value={title}
+							id="title"
 							class="form-control bg-dark text-light border-secondary"
 							placeholder="Enter a title"
 							required />
 					</div>
 					<div class="mb-3">
-						<label class="form-label fw-semibold">Body</label>
+						<label for="body" class="form-label fw-semibold">Body</label>
 						<textarea
 							bind:value={body}
+							id="body"
 							class="form-control bg-dark text-light border-secondary"
 							rows="4"
 							placeholder="What’s on your mind?"
@@ -165,7 +162,7 @@
 						<div class="alert alert-danger py-2">{postError}</div>
 					{/if}
 					<div class="d-flex justify-content-end gap-2">
-						<button type="button" class="btn btn-outline-secondary" on:click={() => modal.hide()} disabled={posting}>
+						<button type="button" class="btn btn-outline-secondary" onclick={() => modal.hide()} disabled={posting}>
 							Cancel
 						</button>
 						<button type="submit" class="btn btn-info text-dark fw-semibold" disabled={posting}>
@@ -181,3 +178,14 @@
 		</div>
 	</div>
 </div>
+
+<style>
+	.post-hover {
+		transition: all 0.15s ease-in-out;
+	}
+	.post-hover:hover {
+		background: rgba(255, 255, 255, 0.03);
+		border-left-color: var(--bs-info);
+		transform: translateX(3px);
+	}
+</style>
