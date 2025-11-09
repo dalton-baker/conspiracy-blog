@@ -1,5 +1,6 @@
 <script>
 	import 'bootstrap/dist/css/bootstrap.min.css';
+	import '$lib/app.css';
 	import favicon from '$lib/assets/favicon.svg';
   	import scriptSrc from 'bootstrap/dist/js/bootstrap.bundle.js?url';
 	

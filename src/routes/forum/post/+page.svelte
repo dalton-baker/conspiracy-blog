@@ -91,7 +91,7 @@
 				<div class="d-flex flex-column gap-3">
 					{#each post.comments as comment}
 						<div class="ps-3 border-start border-3 border-secondary">
-							<p class="mb-1 text-light">{@html renderMarkdown(comment.body)}</p>
+							<p class="mb-1 markup-content">{@html renderMarkdown(comment.body)}</p>
 
                             <small class="text-secondary">
                                 <span class="fw-semibold" style="color: {colorForUser(comment.username)}">
@@ -140,7 +140,7 @@
 						</a>
 					</small>
 				{:else}
-					<div class="text-light" style="min-height: 4rem;">
+					<div class="markup-content" style="min-height: 4rem;">
 						{@html renderMarkdown(commentText || '_Nothing to preview yet..._')}
 					</div>
 				{/if}

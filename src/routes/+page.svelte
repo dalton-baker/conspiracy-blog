@@ -31,7 +31,11 @@
 <h1 class="mb-5 text-center display-5 fw-bold">Wake Up Sheeple</h1>
 
 {#if loading}
-    <div class="p-5 text-center text-secondary">Loading...</div>
+    <div class="text-center py-5">
+        <div class="spinner-border text-info" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
 {:else if error}
     <div class="p-5 text-danger text-center">{error}</div>
 {:else}

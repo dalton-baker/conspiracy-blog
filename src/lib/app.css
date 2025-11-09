@@ -1,0 +1,112 @@
+blockquote {
+    border-left: 0.25rem solid var(--bs-info);
+    padding-left: 1rem;
+    font-style: italic;
+}
+
+blockquote footer {
+    font-size: 0.875em;
+    color: var(--bs-secondary);
+}
+
+
+.card.article {
+    max-width: 800px;
+    margin: 2rem auto;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.card.article .card-img-top {
+    height: 300px;
+    filter: brightness(0.8);
+}
+
+.card.article .card-img-overlay {
+    height: 300px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+}
+
+
+.markup-content {
+	line-height: 1.75;
+	color: var(--bs-light);
+	font-size: 1.05rem;
+}
+
+/* Headings inside markup */
+.markup-content h1,
+.markup-content h2,
+.markup-content h3,
+.markup-content h4 {
+	color: var(--bs-light);
+	margin-top: 1.5rem;
+	margin-bottom: 0.75rem;
+}
+
+/* Paragraphs and spacing */
+.markup-content p {
+	margin-bottom: 1rem;
+}
+
+/* Links */
+.markup-content a {
+	color: var(--bs-info);
+	text-decoration: underline;
+	transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+
+.markup-content a:hover {
+	color: var(--bs-warning);
+	text-decoration-color: var(--bs-warning);
+}
+
+/* Bold and italics */
+.markup-content strong,
+.markup-content b {
+	color: var(--bs-warning);
+	font-weight: 600;
+}
+
+.markup-content em,
+.markup-content i {
+	color: var(--bs-info);
+	font-style: italic;
+}
+
+/* Lists */
+.markup-content ul,
+.markup-content ol {
+	padding-left: 1.5rem;
+	margin-bottom: 1rem;
+}
+
+/* Blockquotes */
+.markup-content blockquote {
+	border-left: 0.25rem solid var(--bs-info);
+	padding-left: 1rem;
+	font-style: italic;
+	color: var(--bs-secondary-color);
+	margin: 1.5rem 0;
+}
+
+/* Code blocks and inline code */
+.markup-content pre,
+.markup-content code {
+	background: rgba(255, 255, 255, 0.05);
+	color: var(--bs-warning);
+	border-radius: 0.25rem;
+	font-family: monospace;
+}
+
+.markup-content pre {
+	padding: 0.75rem 1rem;
+	overflow-x: auto;
+}
+
+.markup-content code {
+	padding: 0.1rem 0.25rem;
+}

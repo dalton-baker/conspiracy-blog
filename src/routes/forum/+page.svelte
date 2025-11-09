@@ -176,7 +176,7 @@
 
 					<!-- Tab content -->
 					{#if postPreview}
-						<div style="min-height: 8rem;">
+						<div class="markup-content" style="min-height: 8rem;">
 							{@html renderMarkdown(body || '*Nothing to preview yet...*')}
 						</div>
 					{:else}
@@ -228,14 +228,5 @@
 		background: rgba(255, 255, 255, 0.03);
 		border-left-color: var(--bs-info);
 		transform: translateX(3px);
-	}
-	.nav-tabs .nav-link {
-		color: var(--bs-secondary);
-		border-color: var(--bs-secondary);
-	}
-	.nav-tabs .nav-link.active {
-		background-color: var(--bs-dark);
-		color: var(--bs-info);
-		border-color: var(--bs-info);
 	}
 </style>
