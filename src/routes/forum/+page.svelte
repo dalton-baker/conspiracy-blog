@@ -125,10 +125,7 @@
 							</small>
 						</div>
 					</a>
-
-					{#if i < posts.length - 1}
-						<hr class="text-secondary opacity-25 my-0" />
-					{/if}
+					<hr class="text-secondary opacity-25 my-0" />
 				</div>
 			{/each}
 		</div>
