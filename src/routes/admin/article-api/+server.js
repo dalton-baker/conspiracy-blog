@@ -46,3 +46,26 @@ export async function POST({ request, platform }) {
 
     return json({ ok: true, id });
 }
+
+// Delete post
+export async function DELETE({ url, platform }) {
+    const id = url.searchParams.get('id');
+    if (!id) return new Response('Missing id', { status: 400 });
+
+    const r2 = platform.env.BLOG_BUCKET;
+
+    // Delete image and article if they exist
+    await r2.delete(`articles/${id}.json`);
+    await r2.delete(`images/${id}.webp`);
+
+    // Remove from summaries
+    const summariesFile = await r2.get('summaries.json');
+    const summaries = summariesFile ? await summariesFile.json() : [];
+    const updated = summaries.filter(a => a.id !== id);
+
+    await r2.put('summaries.json', JSON.stringify(updated, null, 2), {
+        httpMetadata: { contentType: 'application/json' }
+    });
+
+    return json({ ok: true });
+}

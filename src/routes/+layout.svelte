@@ -28,7 +28,7 @@
 			<span class="fw-semibold">Dalton’s Department of Truth</span>
 		</a>
 		<div class="ms-auto">
-			<a href="/" class="btn btn-outline-light btn-sm">Home</a>
+			<a href="/admin" class="btn btn-outline-light btn-sm">Admin</a>
 		</div>
 	</div>
 </nav>

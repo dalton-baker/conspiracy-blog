@@ -1,104 +1,81 @@
 <script>
-  let post = { title: '', summary: '', content: '' };
-  let imageFile = null;
-  let imagePreview = '';
-  let status = '';
+    import { onMount } from 'svelte';
+    import { formatDate } from '$lib';
 
-  async function handleImageChange(e) {
-    const original = e.target.files?.[0];
-    if (!original) return;
+    let error = '';
+    let loading = true;
+    let articles = [];
 
-    // Convert to WebP immediately
-    const converted = await convertToWebP(original);
-    imageFile = converted;
-    imagePreview = URL.createObjectURL(converted);
-  }
+    onMount(async () => await loadPosts());
 
-  async function submit() {
-    try {
-      status = '⏳ Uploading...';
-
-      const form = new FormData();
-      form.append('title', post.title);
-      form.append('summary', post.summary);
-      form.append('content', post.content);
-      if (imageFile) form.append('image', imageFile);
-
-      const res = await fetch('/admin/blog-post', { method: 'POST', body: form });
-      if (!res.ok) throw new Error('Failed to save');
-
-      status = '✅ Article saved!';
-    } catch (err) {
-      console.error(err);
-      status = `❌ ${err.message}`;
+    async function loadPosts(){
+        try {
+            const res = await fetch('https://truth-data.dalt.dev/summaries.json');
+            if (!res.ok) {
+                error = 'Failed to load articles.';
+            } else {
+                articles = await res.json();
+                articles.sort((a, b) => b.date.localeCompare(a.date));
+            }
+        } catch (err) {
+            console.error(err);
+            error = 'Failed to load articles.';
+        } finally {
+            loading = false;
+        }
     }
-  }
 
-  async function convertToWebP(file, maxWidth = 1200, quality = 0.9) {
-    const img = new Image();
-    img.src = URL.createObjectURL(file);
-    await img.decode();
+    async function deleteArticle(id) {
+        if (!confirm('Are you sure you want to delete this post?')) return;
 
-    // Optional resize logic
-    const scale = Math.min(1, maxWidth / img.width);
-    const width = img.width * scale;
-    const height = img.height * scale;
-
-    const canvas = document.createElement('canvas');
-    canvas.width = width;
-    canvas.height = height;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(img, 0, 0, width, height);
-
-    const blob = await new Promise(resolve =>
-      canvas.toBlob(resolve, 'image/webp', quality)
-    );
-
-    // Generate new file name and return a File object
-    const newFile = new File([blob], file.name.replace(/\.[^.]+$/, '.webp'), {
-      type: 'image/webp'
-    });
-
-    return newFile;
-  }
+        // Replace this with your actual API call or R2 delete logic
+        try {
+            await fetch(`/admin/article-api?id=${id}`, { method: 'DELETE' });
+            await loadPosts();
+        } catch (err) {
+            console.error(err);
+            alert('Failed to delete article.');
+        }
+    }
 </script>
 
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-light">Manage Posts</h2>
+        <a class="btn btn-success btn-sm" href="/admin/add-article">+ Add New Post</a>
+    </div>
 
-<div class="container bg-dark text-light p-4 rounded mt-5 shadow-lg" style="max-width: 800px;">
-  <h1 class="mb-4 border-bottom pb-2">📝 New Article</h1>
-
-  <div class="mb-3">
-    <label for="title" class="form-label">Title</label>
-    <input id="title" class="form-control bg-secondary text-light border-0" bind:value={post.title} />
-  </div>
-
-  <div class="mb-3">
-    <label for="summary" class="form-label">Summary</label>
-    <textarea id="summary" class="form-control bg-secondary text-light border-0" rows="2" bind:value={post.summary}></textarea>
-  </div>
-
-  <div class="mb-3">
-    <label for="image" class="form-label">Header Image</label>
-    <input id="image" type="file" accept="image/*" class="form-control bg-secondary text-light border-0" on:change={handleImageChange} />
-    {#if imagePreview}
-      <div class="mt-3 text-center">
-        <img src={imagePreview} alt="Preview" class="img-fluid rounded border border-light" style="max-height: 200px;" />
-      </div>
+    {#if loading}
+        <div class="p-5 text-center text-secondary">Loading...</div>
+    {:else if error}
+        <div class="p-5 text-danger text-center">{error}</div>
+    {:else if articles.length === 0}
+        <div class="p-5 text-center text-secondary">No posts found.</div>
+    {:else}
+        <div class="table-responsive">
+            <table class="table table-dark table-striped align-middle">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Date</th>
+                        <th style="width: 150px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {#each articles as article}
+                        <tr>
+                            <td>{article.title}</td>
+                            <td>{formatDate(article.date)}</td>
+                            <td>
+                                <div class="btn-group">
+                                    <a class="btn btn-sm btn-outline-warning" href="/admin/edit-article?id={article.id}">Edit</a>
+                                    <button class="btn btn-sm btn-outline-danger" on:click={() => deleteArticle(article.id)}>Delete</button>
+                                </div>
+                            </td>
+                        </tr>
+                    {/each}
+                </tbody>
+            </table>
+        </div>
     {/if}
-  </div>
-
-  <div class="mb-3">
-    <label for="content" class="form-label">Content (HTML supported)</label>
-    <textarea id="content" class="form-control bg-secondary text-light border-0" rows="10" bind:value={post.content}></textarea>
-  </div>
-
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <button class="btn btn-primary px-4" on:click={submit}>Publish</button>
-    <p class="m-0">{status}</p>
-  </div>
-
-  <div class="bg-secondary p-3 rounded">
-    <h5 class="border-bottom pb-2 mb-3">Live Preview</h5>
-    <div class="bg-dark p-3 rounded" style="min-height: 100px;"> {@html post.content}</div>
-  </div>
 </div>
