@@ -16,7 +16,7 @@
 	let body = '';
 	let posting = false;
 	let postError = '';
-	let previewTab = false;
+	let postPreview = false;
 
 	onMount(async () => {
 		await loadPosts();
@@ -161,29 +161,30 @@
 					</div>
 
 					<!-- Tabs -->
-					<ul class="nav nav-tabs mb-3 border-secondary">
-						<li class="nav-item">
-							<button
-								type="button"
-								class="nav-link"
-								class:active={!previewTab}
-								onclick={() => (previewTab = false)}>
-								Write
-							</button>
-						</li>
-						<li class="nav-item">
-							<button
-								type="button"
-								class="nav-link"
-								class:active={previewTab}
-								onclick={() => (previewTab = true)}>
-								Preview
-							</button>
-						</li>
-					</ul>
+					<div class="d-flex justify-content-between align-items-center mb-2">
+						<small class="text-secondary">
+							Supports
+							<a
+								href="https://guides.github.com/features/mastering-markdown/"
+								target="_blank"
+								rel="noopener noreferrer"
+								class="link-info">
+								GitHub Markdown
+							</a>
+						</small>
+
+						<button
+							type="button"
+							class="btn btn-sm btn-outline-info"
+							class:btn-outline-info={!postPreview}
+							class:btn-info={postPreview}
+							onclick={() => (postPreview = !postPreview)}>
+							Preview
+						</button>
+					</div>
 
 					<!-- Tab content -->
-					{#if previewTab}
+					{#if postPreview}
 						<div style="min-height: 8rem;">
 							{@html renderMarkdown(body || '*Nothing to preview yet...*')}
 						</div>
