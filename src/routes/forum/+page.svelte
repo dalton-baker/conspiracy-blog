@@ -161,21 +161,10 @@
 					</div>
 
 					<!-- Tabs -->
-					<div class="d-flex justify-content-between align-items-center mb-2">
-						<small class="text-secondary">
-							Supports
-							<a
-								href="https://guides.github.com/features/mastering-markdown/"
-								target="_blank"
-								rel="noopener noreferrer"
-								class="link-info">
-								GitHub Markdown
-							</a>
-						</small>
-
+					<div class="d-flex justify-content-end mb-2">
 						<button
 							type="button"
-							class="btn btn-sm btn-outline-info"
+							class="btn btn-sm"
 							class:btn-outline-info={!postPreview}
 							class:btn-info={postPreview}
 							onclick={() => (postPreview = !postPreview)}>

@@ -110,7 +110,24 @@
 		<section class="pt-3">
 			<h6 class="fw-semibold mb-3">Add a comment</h6>
 			<form onsubmit={submitComment}>
-				<div class="d-flex justify-content-between align-items-center mb-2">
+				<div class="d-flex justify-content-end mb-2">
+						<button
+							type="button"
+							class="btn btn-sm"
+							class:btn-outline-info={!postPreview}
+							class:btn-info={postPreview}
+							onclick={() => (postPreview = !postPreview)}>
+							Preview
+						</button>
+					</div>
+
+				{#if !preview}
+					<textarea
+						bind:value={commentText}
+						class="form-control bg-dark text-light border-secondary"
+						rows="3"
+						placeholder="Write something insightful..."
+						required></textarea>
 					<small class="text-secondary">
 						Supports
 						<a
@@ -121,22 +138,6 @@
 							GitHub Markdown
 						</a>
 					</small>
-
-					<button
-						type="button"
-						class="btn btn-sm btn-outline-info"
-						onclick={() => (preview = !preview)}>
-						{preview ? 'Edit' : 'Preview'}
-					</button>
-				</div>
-
-				{#if !preview}
-					<textarea
-						bind:value={commentText}
-						class="form-control bg-dark text-light border-secondary"
-						rows="3"
-						placeholder="Write something insightful..."
-						required></textarea>
 				{:else}
 					<div class="text-light" style="min-height: 4rem;">
 						{@html renderMarkdown(commentText || '_Nothing to preview yet..._')}
