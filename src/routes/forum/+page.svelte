@@ -113,8 +113,8 @@
 					<div class="py-3 px-2 border-start border-3 border-transparent post-hover">
 						<h5 class="fw-semibold mb-1">{post.title}</h5>
 						<small class="text-secondary">
-							<span class="fw-semibold" style="color: {colorForUser(comment.username)}">
-								{comment.username}
+							<span class="fw-semibold" style="color: {colorForUser(post.username)}">
+								{post.username}
 							</span>
 							• {new Date(post.created).toLocaleString()}
 						</small>
