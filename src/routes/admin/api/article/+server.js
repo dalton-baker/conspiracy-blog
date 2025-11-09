@@ -18,10 +18,6 @@ function getEpochMinutes() {
     return Math.floor(Date.now() / 60000);
 }
 
-export async function GET({ platform }) {
-    return json({authenticate:true});
-}
-
 export async function POST({ request, platform }) {
     const form = await request.formData();
 

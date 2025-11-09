@@ -65,7 +65,7 @@
         form.append('content', post.content);
         if (imageFile) form.append('image', imageFile); // Only if replaced
 
-        const res = await fetch('/admin/article-api', {
+        const res = await fetch('/admin/api/article', {
             method: 'PUT',
             body: form
         });

@@ -27,7 +27,7 @@
             form.append('content', post.content);
             if (imageFile) form.append('image', imageFile);
 
-            const res = await fetch('/admin/article-api', { method: 'POST', body: form });
+            const res = await fetch('/admin/api/article', { method: 'POST', body: form });
             if (!res.ok) throw new Error('Failed to save');
 
             status = '✅ Article saved!';
