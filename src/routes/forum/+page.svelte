@@ -83,15 +83,19 @@
 
 <div class="container py-4 text-light">
 
-	<div class="d-flex justify-content-between align-items-center mb-5">
-		<div>
-			<h3 class="fw-semibold mb-1">Welcome, <span style="color: {colorForUser(forumState.username)}">{forumState.username}</span></h3>
-			<p class="text-secondary mb-0">Here’s what’s buzzing on the forum.</p>
-		</div>
-		<button class="btn btn-outline-info fw-semibold" onclick={openModal}>
+	<div class="d-flex flex-wrap justify-content-between align-items-center mb-5 gap-3">
+	<div class="flex-grow-1">
+		<h3 class="fw-semibold mb-1">
+			Welcome, <span style="color: {colorForUser(forumState.username)}">{forumState.username}</span>
+		</h3>
+		<p class="text-secondary mb-0">Here’s what’s buzzing on the forum.</p>
+	</div>
+	<div class="text-end flex-shrink-0">
+		<button class="btn btn-outline-info fw-semibold w-100 w-sm-auto" onclick={openModal}>
 			New Post
 		</button>
 	</div>
+</div>
 
 	<!-- Posts Section -->
 	{#if loading}
@@ -112,7 +116,7 @@
 				<a href="/forum/post?id={post.id}" class="text-decoration-none text-light">
 					<div
 						class="py-3 px-2 border-start border-3 post-hover"
-						style="border-left-color: {getRandomColor(i)}"
+						style="border-color: {getRandomColor(i)} !important"
 					>
 						<h5 class="fw-semibold mb-1">{post.title}</h5>
 						<small class="text-secondary">
