@@ -49,7 +49,8 @@
 		modal.show();
 	}
 
-	async function createPost() {
+	async function createPost(event) {
+		event.preventDefault();
 		postError = '';
 		posting = true;
 		try {

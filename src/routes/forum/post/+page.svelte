@@ -38,7 +38,8 @@
         }
     });
 
-    async function submitComment() {
+    async function submitComment(event) {
+		event.preventDefault();
 		commentError = '';
 		submitting = true;
 		try {
