@@ -111,23 +111,25 @@
 			No posts yet. Be the first to start a discussion!
 		</div>
 	{:else}
-		<div class="d-flex flex-column gap-0">
+		<div class="d-flex flex-column gap-2">
 			{#each posts as post, i}
-				<a href="/forum/post?id={post.id}" class="text-decoration-none text-light">
-					<div
-						class="py-3 px-2 border-start border-3 post-hover"
-					>
-						<h5 class="fw-semibold mb-1">{post.title}</h5>
-						<small class="text-secondary">
-							<span class="fw-semibold" style="color: {colorForUser(post.username)}">{post.username}</span>
-							• {new Date(post.created).toLocaleString()}
-						</small>
-					</div>
-				</a>
+				<div>
+					<a href="/forum/post?id={post.id}" class="text-decoration-none text-light">
+						<div
+							class="py-3 px-2 border-start border-3 post-hover"
+						>
+							<h5 class="fw-semibold mb-1">{post.title}</h5>
+							<small class="text-secondary">
+								<span class="fw-semibold" style="color: {colorForUser(post.username)}">{post.username}</span>
+								• {new Date(post.created).toLocaleString()}
+							</small>
+						</div>
+					</a>
 
-				{#if i < posts.length - 1}
-					<hr class="text-secondary opacity-25 my-0" />
-				{/if}
+					{#if i < posts.length - 1}
+						<hr class="text-secondary opacity-25 my-0" />
+					{/if}
+				</div>
 			{/each}
 		</div>
 	{/if}
