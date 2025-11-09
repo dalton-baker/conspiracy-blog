@@ -1,6 +1,7 @@
 <script>
     import { goto } from '$app/navigation'
     import { convertToWebP } from '$lib'
+    import { renderMarkdown } from '$lib/markdown'
 
     let post = { title: '', summary: '', content: '' };
     let imageFile = null;
@@ -75,6 +76,6 @@
 
   <div class="bg-secondary p-3 rounded">
     <h5 class="border-bottom pb-2 mb-3">Live Preview</h5>
-    <div class="bg-dark p-3 rounded" style="min-height: 100px;"> {@html post.content}</div>
+    <div class="bg-dark p-3 rounded" style="min-height: 100px;"> {@html renderMarkdown(post.content)}</div>
   </div>
 </div>

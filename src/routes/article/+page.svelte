@@ -38,6 +38,7 @@
     import { page } from '$app/stores';
     import { onMount } from 'svelte';
     import { formatDate } from '$lib';
+    import { renderMarkdown } from '$lib/markdown'
 
     let article = null;
     let error = '';
@@ -90,7 +91,7 @@
     </div>
     <div class="container mb-5">
         <article class="py-4">
-            {@html article.content}
+            {@html renderMarkdown(article.content)}
         </article>
     </div>
 {/if}

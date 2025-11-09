@@ -3,6 +3,7 @@
     import { page } from '$app/stores';
     import { goto } from '$app/navigation';
     import { convertToWebP } from '$lib'
+    import { renderMarkdown } from '$lib/markdown'
 
     let post = { id: '', title: '', summary: '', content: '', date: '' };
     let imageFile = null;
@@ -120,7 +121,8 @@
 
     <div class="mb-3">
       <label for="content" class="form-label">Content (HTML supported)</label>
-      <textarea id="content" class="form-control bg-secondary text-light border-0" rows="10" bind:value={post.content}></textarea>
+      <textarea id="content" class="form-control bg-secondary text-light border-0" rows="10" 
+                bind:value={post.content}></textarea>
     </div>
 
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -131,7 +133,7 @@
     <div class="bg-secondary p-3 rounded">
       <h5 class="border-bottom pb-2 mb-3">Live Preview</h5>
       <div class="bg-dark p-3 rounded" style="min-height: 100px;">
-        {@html post.content}
+        {@html renderMarkdown(post.content)}
       </div>
     </div>
   </div>

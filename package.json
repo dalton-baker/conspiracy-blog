@@ -20,6 +20,8 @@
 		"wrangler": "^4.46.0"
 	},
 	"dependencies": {
-		"bootstrap": "^5.3.8"
+		"bootstrap": "^5.3.8",
+		"dompurify": "^3.3.0",
+		"marked": "^17.0.0"
 	}
 }
