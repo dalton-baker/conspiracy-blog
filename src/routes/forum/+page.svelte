@@ -116,7 +116,6 @@
 				<a href="/forum/post?id={post.id}" class="text-decoration-none text-light">
 					<div
 						class="py-3 px-2 border-start border-3 post-hover"
-						style="border-color: {getRandomColor(i)} !important"
 					>
 						<h5 class="fw-semibold mb-1">{post.title}</h5>
 						<small class="text-secondary">
