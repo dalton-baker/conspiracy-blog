@@ -43,12 +43,12 @@
 
 <footer class="bg-secondary text-center text-light py-3 mt-auto">
 	<div class="container">
-		<p class="mb-2">© 2025 Dalton’s Department of Truth — All rights reserved.</p>
 		<p class="mb-0">
 			<a href="/about" class="text-light text-decoration-none">About</a>
 			· <a href="https://daltonsbaker.com" target="_blank" class="text-light text-decoration-none">Contact</a>
 			· <a href="https://daltonsbaker.com/privacyPolicy" target="_blank"
 				class="text-light text-decoration-none">Disclaimer</a>
 		</p>
+		<p class="mb-2">© 2025 Dalton’s Department of Truth</p>
 	</div>
 </footer>
