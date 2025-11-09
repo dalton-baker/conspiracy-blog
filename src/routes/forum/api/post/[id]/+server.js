@@ -10,7 +10,7 @@ export async function GET({ params, platform }) {
     const post = JSON.parse(postRaw);
 
     // Later: load comments
-    const commentsList = await kv.list({ prefix: `post:${id}:comment:` });
+    const commentsList = await kv.list({ prefix: `comment:${id}:` });
     const comments = [];
 
     for (const entry of commentsList.keys) {

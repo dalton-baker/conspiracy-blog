@@ -43,7 +43,7 @@ export async function POST({ request, params, platform }) {
             created
         };
 
-        const commentKey = `${postKey}:comment:${commentId}`;
+        const commentKey = `comment:${postId}:${commentId}`;
         await kv.put(commentKey, JSON.stringify(comment));
 
         return new Response(JSON.stringify(comment), {
