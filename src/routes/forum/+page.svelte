@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { forumState } from './state.svelte.js';
 	import { Modal } from 'bootstrap';
+    import { colorForUser } from '$lib';
 
 	let posts = [];
 	let loading = true;
@@ -112,7 +113,10 @@
 					<div class="py-3 px-2 border-start border-3 border-transparent post-hover">
 						<h5 class="fw-semibold mb-1">{post.title}</h5>
 						<small class="text-secondary">
-							{post.username} • {new Date(post.created).toLocaleString()}
+							<span class="fw-semibold" style="color: {colorForUser(comment.username)}">
+								{comment.username}
+							</span>
+							• {new Date(post.created).toLocaleString()}
 						</small>
 					</div>
 				</a>

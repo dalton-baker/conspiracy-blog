@@ -1,6 +1,7 @@
 <script>
     import { page } from '$app/stores';
     import { onMount } from 'svelte';
+    import { colorForUser } from '$lib';
 
     let post = null;
     let error = '';
@@ -74,7 +75,7 @@
 		<article class="mb-5">
 			<h2 class="fw-bold mb-2">{post.title}</h2>
 			<div class="d-flex flex-wrap align-items-center text-secondary small mb-3 border-bottom border-secondary pb-2">
-				<span class="me-2 text-info fw-semibold">{post.username}</span>
+				<span class="me-2 fw-semibold" style="color: {colorForUser(comment.username)}">{post.username}</span>
 				<span>• {new Date(post.created).toLocaleString()}</span>
 			</div>
 			<p class="fs-5 lh-base text-light">{post.body}</p>
@@ -88,9 +89,13 @@
 					{#each post.comments as comment}
 						<div class="ps-3 border-start border-3 border-secondary">
 							<p class="mb-1 text-light">{comment.body}</p>
-							<small class="text-secondary">
-								{comment.username} • {new Date(comment.created).toLocaleString()}
-							</small>
+
+                            <small class="text-secondary">
+                                <span class="fw-semibold" style="color: {colorForUser(comment.username)}">
+                                    {comment.username}
+                                </span>
+                                • {new Date(comment.created).toLocaleString()}
+                            </small>
 						</div>
 					{/each}
 				</div>
@@ -102,7 +107,7 @@
 		<!-- New Comment Form -->
 		<section class="pt-3 border-top border-secondary">
 			<h6 class="fw-semibold mb-3">Add a comment</h6>
-			<form on:submit|preventDefault={submitComment}>
+			<form onsumit={submitComment}>
 				<div class="mb-3">
 					<textarea
 						bind:value={commentText}
