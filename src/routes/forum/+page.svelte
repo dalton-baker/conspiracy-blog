@@ -85,7 +85,7 @@
 
 	<div class="d-flex justify-content-between align-items-center mb-5">
 		<div>
-			<h3 class="fw-semibold mb-1">Welcome, <span class="text-info">{forumState.username}</span></h3>
+			<h3 class="fw-semibold mb-1">Welcome, <span style="color: {colorForUser(post.username)}">{forumState.username}</span></h3>
 			<p class="text-secondary mb-0">Here’s what’s buzzing on the forum.</p>
 		</div>
 		<button class="btn btn-outline-info fw-semibold" onclick={openModal}>
