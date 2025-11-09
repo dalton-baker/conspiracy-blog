@@ -78,11 +78,6 @@
     padding-left: 1rem;
     font-style: italic;
     color: var(--bs-light);
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 0.25rem;
-    margin: 1.5rem 0;
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
 }
 
 .markup-content blockquote p{
