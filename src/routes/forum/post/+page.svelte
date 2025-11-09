@@ -12,7 +12,7 @@
     let commentText = '';
 	let submitting = false;
 	let commentError = '';
-	let preview = false;
+	let commentPreview = false;
 
     onMount(async () => {
         postId = $page.url.searchParams.get('id');
@@ -114,14 +114,14 @@
 						<button
 							type="button"
 							class="btn btn-sm"
-							class:btn-outline-info={!postPreview}
-							class:btn-info={postPreview}
-							onclick={() => (postPreview = !postPreview)}>
+							class:btn-outline-info={!commentPreview}
+							class:btn-info={commentPreview}
+							onclick={() => (commentPreview = !commentPreview)}>
 							Preview
 						</button>
 					</div>
 
-				{#if !preview}
+				{#if !commentPreview}
 					<textarea
 						bind:value={commentText}
 						class="form-control bg-dark text-light border-secondary"
