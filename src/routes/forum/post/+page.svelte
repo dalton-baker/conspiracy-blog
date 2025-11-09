@@ -79,7 +79,7 @@
 				<span class="me-2 fw-semibold" style="color: {colorForUser(post.username)}">{post.username}</span>
 				<span>• {new Date(post.created).toLocaleString()}</span>
 			</div>
-			<p class="fs-5 lh-base text-light">{renderMarkdown(post.body)}</p>
+			<p class="fs-5 lh-base text-light">{@html renderMarkdown(post.body)}</p>
 		</article>
 
 		<!-- Comments Section -->
@@ -106,7 +106,7 @@
 		</section>
 
 		<!-- New Comment Form -->
-		<section class="pt-3 border-top border-secondary">
+		<section class="pt-3">
 			<h6 class="fw-semibold mb-3">Add a comment</h6>
 			<form onsumit={submitComment}>
 				<div class="mb-3">
