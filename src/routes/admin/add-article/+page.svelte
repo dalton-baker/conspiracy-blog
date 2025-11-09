@@ -1,66 +1,42 @@
 <script>
-  let post = { title: '', summary: '', content: '' };
-  let imageFile = null;
-  let imagePreview = '';
-  let status = '';
+    import { goto } from '$app/navigation'
+    import { convertToWebP } from '$lib'
 
-  async function handleImageChange(e) {
-    const original = e.target.files?.[0];
-    if (!original) return;
+    let post = { title: '', summary: '', content: '' };
+    let imageFile = null;
+    let imagePreview = '';
+    let status = '';
 
-    // Convert to WebP immediately
-    const converted = await convertToWebP(original);
-    imageFile = converted;
-    imagePreview = URL.createObjectURL(converted);
-  }
+    async function handleImageChange(e) {
+        const original = e.target.files?.[0];
+        if (!original) return;
 
-  async function submit() {
-    try {
-      status = '⏳ Uploading...';
-
-      const form = new FormData();
-      form.append('title', post.title);
-      form.append('summary', post.summary);
-      form.append('content', post.content);
-      if (imageFile) form.append('image', imageFile);
-
-      const res = await fetch('/admin/article-api', { method: 'POST', body: form });
-      if (!res.ok) throw new Error('Failed to save');
-
-      status = '✅ Article saved!';
-    } catch (err) {
-      console.error(err);
-      status = `❌ ${err.message}`;
+        // Convert to WebP immediately
+        const converted = await convertToWebP(original);
+        imageFile = converted;
+        imagePreview = URL.createObjectURL(converted);
     }
-  }
 
-  async function convertToWebP(file, maxWidth = 1200, quality = 0.9) {
-    const img = new Image();
-    img.src = URL.createObjectURL(file);
-    await img.decode();
+    async function submit() {
+        try {
+            status = '⏳ Uploading...';
 
-    // Optional resize logic
-    const scale = Math.min(1, maxWidth / img.width);
-    const width = img.width * scale;
-    const height = img.height * scale;
+            const form = new FormData();
+            form.append('title', post.title);
+            form.append('summary', post.summary);
+            form.append('content', post.content);
+            if (imageFile) form.append('image', imageFile);
 
-    const canvas = document.createElement('canvas');
-    canvas.width = width;
-    canvas.height = height;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(img, 0, 0, width, height);
+            const res = await fetch('/admin/article-api', { method: 'POST', body: form });
+            if (!res.ok) throw new Error('Failed to save');
 
-    const blob = await new Promise(resolve =>
-      canvas.toBlob(resolve, 'image/webp', quality)
-    );
-
-    // Generate new file name and return a File object
-    const newFile = new File([blob], file.name.replace(/\.[^.]+$/, '.webp'), {
-      type: 'image/webp'
-    });
-
-    return newFile;
-  }
+            status = '✅ Article saved!';
+            goto("/admin");
+        } catch (err) {
+            console.error(err);
+            status = `❌ ${err.message}`;
+        }
+    }
 </script>
 
 
@@ -92,7 +68,7 @@
     <textarea id="content" class="form-control bg-secondary text-light border-0" rows="10" bind:value={post.content}></textarea>
   </div>
 
-  <div class="d-flex justify-content-between align-items-center mb-4">
+  <div class="d-flex justify-content-start align-items-center mb-4">
     <button class="btn btn-primary px-4" on:click={submit}>Publish</button>
     <p class="m-0">{status}</p>
   </div>

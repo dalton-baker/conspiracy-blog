@@ -73,3 +73,52 @@ export async function DELETE({ url, platform }) {
 
     return json({ ok: true });
 }
+
+export async function PUT({ request, platform }) {
+    const form = await request.formData();
+    const r2 = platform.env.BLOG_BUCKET;
+
+    const id = form.get('id')?.toString();
+    if (!id) return new Response('Missing id', { status: 400 });
+
+    const title = form.get('title')?.toString() ?? '';
+    const summary = form.get('summary')?.toString() ?? '';
+    const content = form.get('content')?.toString() ?? '';
+    const image = form.get('image');
+
+    // Pull summaries list
+    const summariesFile = await r2.get('summaries.json');
+    const summaries = summariesFile ? await summariesFile.json() : [];
+
+    console.log(summaries);
+    console.log(id);
+    const existingIndex = summaries.findIndex(s => s.id === id);
+    if (existingIndex === -1)
+        return new Response('Article not found in summaries', { status: 404 });
+
+    const date = summaries[existingIndex].date ?? new Date().toISOString().split('T')[0];
+
+    // Replace image if new one provided
+    if (image instanceof File && image.size > 0) {
+        if (image.type !== 'image/webp')
+            return new Response('Only WebP images are allowed', { status: 400 });
+
+        await r2.put(`images/${id}.webp`, await image.arrayBuffer(), {
+            httpMetadata: { contentType: 'image/webp' }
+        });
+    }
+
+    // Update article JSON
+    const updatedArticle = { title, date, content };
+    await r2.put(`articles/${id}.json`, JSON.stringify(updatedArticle, null, 2), {
+        httpMetadata: { contentType: 'application/json' }
+    });
+
+    // Update summary entry
+    summaries[existingIndex] = { id, title, summary, date };
+    await r2.put('summaries.json', JSON.stringify(summaries, null, 2), {
+        httpMetadata: { contentType: 'application/json' }
+    });
+
+    return json({ ok: true, id });
+}
