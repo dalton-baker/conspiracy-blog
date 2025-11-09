@@ -74,7 +74,7 @@
 		<div class="bg-dark border border-secondary rounded-3 shadow-sm p-4 mb-4">
 			<h3 class="text-primary mb-3">{post.title}</h3>
 			<p class="text-secondary mb-2">
-				Posted by <span class="text-info">@{post.username}</span>
+				Posted by <span class="text-info">{post.username}</span>
 				<small class="ms-2">{new Date(post.created).toLocaleString()}</small>
 			</p>
 			<hr class="border-secondary" />
@@ -90,7 +90,7 @@
 						<li class="list-group-item bg-dark text-light border-secondary rounded-2 mb-2 shadow-sm">
 							<p class="mb-1">{comment.body}</p>
 							<small class="text-secondary">
-								@{comment.username} — {new Date(comment.created).toLocaleString()}
+								{comment.username} — {new Date(comment.created).toLocaleString()}
 							</small>
 						</li>
 					{/each}
