@@ -22,7 +22,7 @@
         }
 
         try {
-            const res = await fetch(`forum/api/post/${postId}`);
+            const res = await fetch(`/forum/api/post/${postId}`);
             if (!res.ok){
                 error = 'Failed to load post.';
             }else{
