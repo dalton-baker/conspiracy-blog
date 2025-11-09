@@ -1,7 +1,7 @@
 import { json } from '@sveltejs/kit';
 
 export async function GET({ request, platform }) {
-    //return json({ id: crypto.randomUUID().replace(/-/g, ''), username: null });
+    //return json({ id: crypto.randomUUID().replace(/-/g, ''), username: "Dalton" });
     const email = request.headers.get('cf-access-authenticated-user-email');
     if (!email) return new Response('Unauthorized', { status: 401 });
 
