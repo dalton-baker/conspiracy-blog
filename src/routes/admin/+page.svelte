@@ -1,7 +1,7 @@
 <script>
     import { onMount } from 'svelte';
     import { formatDate } from '$lib';
-
+    
     let error = '';
     let loading = true;
     let articles = [];

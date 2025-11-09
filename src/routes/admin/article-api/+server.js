@@ -1,5 +1,9 @@
 import { json } from '@sveltejs/kit';
 
+export async function GET({ platform }) {
+    return json({authenticate:true});
+}
+
 export async function POST({ request, platform }) {
     const form = await request.formData();
 
