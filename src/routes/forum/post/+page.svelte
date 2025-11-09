@@ -109,18 +109,18 @@
 
 		<!-- New Comment Form -->
 		<section class="pt-3">
-			<h6 class="fw-semibold mb-3">Add a comment</h6>
 			<form onsubmit={submitComment}>
-				<div class="d-flex justify-content-end mb-2">
-						<button
-							type="button"
-							class="btn btn-sm"
-							class:btn-outline-info={!commentPreview}
-							class:btn-info={commentPreview}
-							onclick={() => (commentPreview = !commentPreview)}>
-							Preview
-						</button>
-					</div>
+				<div class="d-flex justify-content-between align-items-center mb-2">
+					<h6 class="fw-semibold mb-3">Add a comment</h6>
+					<button
+						type="button"
+						class="btn btn-sm"
+						class:btn-outline-info={!commentPreview}
+						class:btn-info={commentPreview}
+						onclick={() => (commentPreview = !commentPreview)}>
+						Preview
+					</button>
+				</div>
 
 				{#if !commentPreview}
 					<textarea
