@@ -60,6 +60,9 @@
                 error = 'Failed to load article.';
             }else{
                 article = await res.json();
+
+                article.imageSrc = `https://truth-data.dalt.dev/images/${articleId}.webp`
+                if(article.lastUpdated) article.imageSrc += `?v=${article.lastUpdated}`
             }
         } catch (err) {
             console.error(err);
@@ -78,7 +81,7 @@
 {:else}
     <div class="container my-4">
         <div class="article-hero">
-            <img src="https://truth-data.dalt.dev/images/{articleId}.webp" alt="Elite Lookiong at moon model">
+            <img src="{article.imageSrc}" alt="Elite Lookiong at moon model">
             <div class="overlay text-light">
                 <h2 class="fw-bold">{article.title}</h2>
                 <p class="mb-0">{formatDate(article.date)}</p>

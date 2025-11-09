@@ -34,6 +34,8 @@
 
         // Display current header image
         imagePreview = `https://truth-data.dalt.dev/images/${articleId}.webp`;
+        if(article.lastUpdated) imagePreview += `?v=${article.lastUpdated}`;
+        
         } catch (err) {
             console.error(err);
             status = '❌ Failed to load article data.';

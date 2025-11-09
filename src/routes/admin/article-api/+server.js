@@ -1,5 +1,23 @@
 import { json } from '@sveltejs/kit';
 
+function getMountainDate() {
+    const now = new Date();
+    const formatter = new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'America/Denver',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+    });
+
+    // en-CA gives ISO-style "YYYY-MM-DD" parts automatically
+    return formatter.format(now);
+}
+
+function getEpochMinutes() {
+    // milliseconds → seconds → round to nearest minute
+    return Math.floor(Date.now() / 60000);
+}
+
 export async function GET({ platform }) {
     return json({authenticate:true});
 }
@@ -15,7 +33,7 @@ export async function POST({ request, platform }) {
 
     const r2 = platform.env.BLOG_BUCKET;
     const id = crypto.randomUUID().replace(/-/g, '');
-    const date = new Date().toISOString().split('T')[0];
+    const date = getMountainDate();
 
     // Handle image upload (WebP only)
     if (image instanceof File) {
@@ -51,29 +69,6 @@ export async function POST({ request, platform }) {
     return json({ ok: true, id });
 }
 
-// Delete post
-export async function DELETE({ url, platform }) {
-    const id = url.searchParams.get('id');
-    if (!id) return new Response('Missing id', { status: 400 });
-
-    const r2 = platform.env.BLOG_BUCKET;
-
-    // Delete image and article if they exist
-    await r2.delete(`articles/${id}.json`);
-    await r2.delete(`images/${id}.webp`);
-
-    // Remove from summaries
-    const summariesFile = await r2.get('summaries.json');
-    const summaries = summariesFile ? await summariesFile.json() : [];
-    const updated = summaries.filter(a => a.id !== id);
-
-    await r2.put('summaries.json', JSON.stringify(updated, null, 2), {
-        httpMetadata: { contentType: 'application/json' }
-    });
-
-    return json({ ok: true });
-}
-
 export async function PUT({ request, platform }) {
     const form = await request.formData();
     const r2 = platform.env.BLOG_BUCKET;
@@ -85,6 +80,7 @@ export async function PUT({ request, platform }) {
     const summary = form.get('summary')?.toString() ?? '';
     const content = form.get('content')?.toString() ?? '';
     const image = form.get('image');
+    const lastUpdated = getEpochMinutes();
 
     // Pull summaries list
     const summariesFile = await r2.get('summaries.json');
@@ -109,16 +105,38 @@ export async function PUT({ request, platform }) {
     }
 
     // Update article JSON
-    const updatedArticle = { title, date, content };
+    const updatedArticle = { title, date, lastUpdated, content };
     await r2.put(`articles/${id}.json`, JSON.stringify(updatedArticle, null, 2), {
         httpMetadata: { contentType: 'application/json' }
     });
 
     // Update summary entry
-    summaries[existingIndex] = { id, title, summary, date };
+    summaries[existingIndex] = { id, title, summary, date, lastUpdated };
     await r2.put('summaries.json', JSON.stringify(summaries, null, 2), {
         httpMetadata: { contentType: 'application/json' }
     });
 
     return json({ ok: true, id });
+}
+
+export async function DELETE({ url, platform }) {
+    const id = url.searchParams.get('id');
+    if (!id) return new Response('Missing id', { status: 400 });
+
+    const r2 = platform.env.BLOG_BUCKET;
+
+    // Delete image and article if they exist
+    await r2.delete(`articles/${id}.json`);
+    await r2.delete(`images/${id}.webp`);
+
+    // Remove from summaries
+    const summariesFile = await r2.get('summaries.json');
+    const summaries = summariesFile ? await summariesFile.json() : [];
+    const updated = summaries.filter(a => a.id !== id);
+
+    await r2.put('summaries.json', JSON.stringify(updated, null, 2), {
+        httpMetadata: { contentType: 'application/json' }
+    });
+
+    return json({ ok: true });
 }

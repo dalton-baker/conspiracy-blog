@@ -14,6 +14,10 @@
             }else{
                 articles = await res.json();
                 articles.sort((a, b) => b.date.localeCompare(a.date));
+                for (const article of articles) {
+                    article.imageSrc = `https://truth-data.dalt.dev/images/${article.id}.webp`;
+                    if (article.lastUpdated) article.imageSrc += `?v=${article.lastUpdated}`;
+                }
             }
         } catch (err) {
             console.error(err);
@@ -35,8 +39,7 @@
         {#each articles as article}
             <div class="col-md-6 col-lg-4">
                 <div class="card h-100 bg-secondary text-light border-light shadow-sm">
-                    <img src="https://truth-data.dalt.dev/images/{article.id}.webp" class="card-img-top"
-                        alt="The Moon is Actually Rental Property">
+                    <img src="{article.imageSrc}" class="card-img-top" alt="{article.title} image">
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title">{article.title}</h5>
                         <p class="card-text flex-grow-1">{article.summary}</p>
