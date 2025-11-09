@@ -14,8 +14,10 @@
 			if (!res.ok) throw new Error(`HTTP ${res.status}`);
 			const authData = await res.json();
             
-            authenticated = authData.authenticate;
-			if (!authData.authenticate) throw new Error('Not authenticated');
+			console.log(authData);
+
+            id = authData.id;
+			if (!id) throw new Error('Not authenticated');
 
 			// Logged in successfully, clear reload count
 			sessionStorage.removeItem('authReloadCount');
