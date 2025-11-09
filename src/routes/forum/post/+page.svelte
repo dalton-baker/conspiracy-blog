@@ -2,6 +2,7 @@
     import { page } from '$app/stores';
     import { onMount } from 'svelte';
     import { colorForUser } from '$lib';
+    import { renderMarkdown } from '$lib/markdown'
 
     let post = null;
     let error = '';
@@ -78,7 +79,7 @@
 				<span class="me-2 fw-semibold" style="color: {colorForUser(post.username)}">{post.username}</span>
 				<span>• {new Date(post.created).toLocaleString()}</span>
 			</div>
-			<p class="fs-5 lh-base text-light">{post.body}</p>
+			<p class="fs-5 lh-base text-light">{renderMarkdown(post.body)}</p>
 		</article>
 
 		<!-- Comments Section -->

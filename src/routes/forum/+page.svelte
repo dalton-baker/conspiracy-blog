@@ -3,6 +3,7 @@
 	import { forumState } from './state.svelte.js';
 	import { Modal } from 'bootstrap';
     import { colorForUser, getRandomColor } from '$lib';
+    import { renderMarkdown } from '$lib/markdown'
 
 	let posts = [];
 	let loading = true;
@@ -132,18 +133,20 @@
 	{/if}
 </div>
 
-<div class="modal fade"
+<div
+	class="modal fade"
 	bind:this={modalEl}
 	tabindex="-1"
 	aria-labelledby="newPostLabel"
 	aria-hidden="true"
 	data-bs-backdrop="static"
 	data-bs-keyboard="false">
-	<div class="modal-dialog modal-dialog-centered">
+	<div class="modal-dialog modal-dialog-centered modal-lg">
 		<div class="modal-content bg-dark text-light border-secondary shadow-lg">
 			<div class="modal-header border-secondary">
 				<h5 class="modal-title" id="newPostLabel">Create New Post</h5>
 			</div>
+
 			<div class="modal-body">
 				<form onsubmit={createPost}>
 					<div class="mb-3">
@@ -155,21 +158,59 @@
 							placeholder="Enter a title"
 							required />
 					</div>
-					<div class="mb-3">
-						<label for="body" class="form-label fw-semibold">Body</label>
-						<textarea
-							bind:value={body}
-							id="body"
-							class="form-control bg-dark text-light border-secondary"
-							rows="4"
-							placeholder="What’s on your mind?"
-							required></textarea>
-					</div>
-					{#if postError}
-						<div class="alert alert-danger py-2">{postError}</div>
+
+					<!-- Tabs -->
+					<ul class="nav nav-tabs mb-3 border-secondary">
+						<li class="nav-item">
+							<button
+								type="button"
+								class="nav-link"
+								class:active={activeTab === 'write'}
+								onclick={() => (activeTab = 'write')}>
+								Write
+							</button>
+						</li>
+						<li class="nav-item">
+							<button
+								type="button"
+								class="nav-link"
+								class:active={activeTab === 'preview'}
+								onclick={() => (activeTab = 'preview')}>
+								Preview
+							</button>
+						</li>
+					</ul>
+
+					<!-- Tab content -->
+					{#if activeTab === 'write'}
+						<div class="mb-3">
+							<textarea
+								bind:value={body}
+								id="body"
+								class="form-control bg-dark text-light border-secondary"
+								rows="6"
+								placeholder="Write your post using GitHub Markdown..."
+								required></textarea>
+							<small class="text-secondary">
+								Supports <a href="https://guides.github.com/features/mastering-markdown/" target="_blank" rel="noopener noreferrer" class="link-info">GitHub Markdown</a>.
+							</small>
+						</div>
+					{:else}
+						<div class="border border-secondary rounded p-3 bg-black markdown-preview" style="min-height: 8rem;">
+							{@html renderMarkdown(body || '_Nothing to preview yet..._')}
+						</div>
 					{/if}
-					<div class="d-flex justify-content-end gap-2">
-						<button type="button" class="btn btn-outline-secondary" onclick={() => modal.hide()} disabled={posting}>
+
+					{#if postError}
+						<div class="alert alert-danger py-2 mt-3">{postError}</div>
+					{/if}
+
+					<div class="d-flex justify-content-end gap-2 mt-3">
+						<button
+							type="button"
+							class="btn btn-outline-secondary"
+							onclick={() => modal.hide()}
+							disabled={posting}>
 							Cancel
 						</button>
 						<button type="submit" class="btn btn-info text-dark fw-semibold" disabled={posting}>
@@ -194,5 +235,17 @@
 		background: rgba(255, 255, 255, 0.03);
 		border-left-color: var(--bs-info);
 		transform: translateX(3px);
+	}
+	.nav-tabs .nav-link {
+		color: var(--bs-secondary);
+		border-color: var(--bs-secondary);
+	}
+	.nav-tabs .nav-link.active {
+		background-color: var(--bs-dark);
+		color: var(--bs-info);
+		border-color: var(--bs-info);
+	}
+	.markdown-preview {
+		line-height: 1.5;
 	}
 </style>
