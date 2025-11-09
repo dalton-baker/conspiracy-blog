@@ -1,5 +1,8 @@
 <script>
+	import 'bootstrap/dist/css/bootstrap.min.css';
 	import favicon from '$lib/assets/favicon.svg';
+  	import scriptSrc from 'bootstrap/dist/js/bootstrap.bundle.js?url';
+	
 	let { children } = $props();
 </script>
 
@@ -19,6 +22,7 @@
 			height: 200px;
 		}
 	</style>
+	<script src={scriptSrc}></script>
 </svelte:head>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-secondary shadow-sm">

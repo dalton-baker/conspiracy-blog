@@ -1,5 +1,7 @@
 <script>
     import { onMount } from 'svelte';
+	import { goto } from '$app/navigation'
+	
 	let { children } = $props();
     const maxReloadCount = 1;
     let authenticated = $state(false);
@@ -27,7 +29,7 @@
 				window.location.reload();
 			} else {
 				sessionStorage.removeItem('authReloadCount');
-				window.location.href = '/'; // boot them home
+				goto('/');
 			}
 		}
 	});

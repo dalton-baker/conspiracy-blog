@@ -33,12 +33,3 @@ export async function convertToWebP(file, maxWidth = 1200, quality = 0.9) {
         type: 'image/webp'
     });
 }
-async function handleImageChange(e) {
-    const original = e.target.files?.[0];
-    if (!original) return;
-
-    // Convert to WebP immediately
-    const converted = await convertToWebP(original);
-    imageFile = converted;
-    imagePreview = URL.createObjectURL(converted);
-}
