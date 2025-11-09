@@ -25,7 +25,6 @@ export async function GET({ request, platform }) {
     } else {
         const now = new Date().toISOString();
         profile = {
-            id,
             username: null,
             firstLogin: now,
             lastLogin: now
