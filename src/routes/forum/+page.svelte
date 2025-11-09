@@ -16,7 +16,7 @@
 	let body = '';
 	let posting = false;
 	let postError = '';
-	let activeTab = 'write';
+	let previewTab = false;
 
 	onMount(async () => {
 		await loadPosts();
@@ -166,8 +166,8 @@
 							<button
 								type="button"
 								class="nav-link"
-								class:active={activeTab === 'write'}
-								onclick={() => (activeTab = 'write')}>
+								class:active={!previewTab}
+								onclick={() => (previewTab = false)}>
 								Write
 							</button>
 						</li>
@@ -175,15 +175,19 @@
 							<button
 								type="button"
 								class="nav-link"
-								class:active={activeTab === 'preview'}
-								onclick={() => (activeTab = 'preview')}>
+								class:active={previewTab}
+								onclick={() => (previewTab = true)}>
 								Preview
 							</button>
 						</li>
 					</ul>
 
 					<!-- Tab content -->
-					{#if activeTab === 'write'}
+					{#if previewTab}
+						<div style="min-height: 8rem;">
+							{@html renderMarkdown(body || '*Nothing to preview yet...*')}
+						</div>
+					{:else}
 						<div class="mb-3">
 							<textarea
 								bind:value={body}
@@ -195,10 +199,6 @@
 							<small class="text-secondary">
 								Supports <a href="https://guides.github.com/features/mastering-markdown/" target="_blank" rel="noopener noreferrer" class="link-info">GitHub Markdown</a>.
 							</small>
-						</div>
-					{:else}
-						<div class="border border-secondary rounded p-3 bg-black markdown-preview" style="min-height: 8rem;">
-							{@html renderMarkdown(body || '_Nothing to preview yet..._')}
 						</div>
 					{/if}
 
