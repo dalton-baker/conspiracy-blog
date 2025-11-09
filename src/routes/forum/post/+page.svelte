@@ -111,7 +111,7 @@
 		<section class="pt-3">
 			<form onsubmit={submitComment}>
 				<div class="d-flex justify-content-between align-items-center mb-2">
-					<h6 class="fw-semibold mb-3">Add a comment</h6>
+					<h6 class="fw-semibold mb-0">Add a comment</h6>
 					<button
 						type="button"
 						class="btn btn-sm"

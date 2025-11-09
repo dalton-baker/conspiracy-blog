@@ -163,7 +163,7 @@
 
 					<!-- Tabs -->
 					<div class="d-flex justify-content-between align-items-center mb-2">
-						<label for="body" class="form-label fw-semibold">Body</label>
+						<label for="body" class="form-label fw-semibold mb-0">Body</label>
 						<button
 							type="button"
 							class="btn btn-sm"
