@@ -24,6 +24,7 @@
 			height: 200px;
 		}
 	</style>
+	<link rel="preload" href={mapSrc} as="fetch" crossorigin="anonymous" />
 	<script src={scriptSrc}></script>
 </svelte:head>
 
