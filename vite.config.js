@@ -3,36 +3,44 @@ import { defineConfig } from 'vite';
 import fs from 'fs';
 import path from 'path';
 
-function renameBootstrapMap() {
+function fixBootstrapSourceMapComment() {
 	return {
-		name: 'rename-bootstrap-map',
+		name: 'fix-bootstrap-sourcemap-comment',
 		closeBundle() {
-			// SvelteKit’s final client output lives here:
-			const dir = '.svelte-kit/output/client/_app/immutable/assets';
+			const dirs = [
+				'build/_app/immutable/assets',                         // adapter-cloudflare / final
+				'.svelte-kit/output/client/_app/immutable/assets'       // local build
+			];
 
-			if (!fs.existsSync(dir)) {
-				console.log('⚠️ Assets directory not found:', dir);
-				return;
-			}
+			for (const dir of dirs) {
+				if (!fs.existsSync(dir)) continue;
 
-			const files = fs.readdirSync(dir);
-			const jsFile = files.find(f => f.startsWith('bootstrap.bundle.') && f.endsWith('.js'));
-			const mapFile = files.find(f => f.startsWith('bootstrap.bundle.') && f.endsWith('.map'));
+				const files = fs.readdirSync(dir);
+				const jsFile = files.find(f => f.startsWith('bootstrap.bundle.') && f.endsWith('.js'));
+				const mapFile = files.find(f => f.startsWith('bootstrap.bundle.') && f.endsWith('.map'));
+				if (!jsFile || !mapFile) continue;
 
-			if (!jsFile || !mapFile) {
-				console.log('ℹ️ Bootstrap JS or map not found, skipping rename.');
-				return;
-			}
+				const jsPath = path.join(dir, jsFile);
+				const mapFileName = path.basename(mapFile);
 
-			const newMapName = jsFile + '.map';
-			const oldPath = path.join(dir, mapFile);
-			const newPath = path.join(dir, newMapName);
+				try {
+					let contents = fs.readFileSync(jsPath, 'utf8');
 
-			try {
-				fs.renameSync(oldPath, newPath);
-				console.log(`✅ Renamed ${mapFile} → ${newMapName}`);
-			} catch (err) {
-				console.error(`❌ Failed to rename map file: ${err.message}`);
+					// Replace or add the sourceMappingURL line at the end of the file
+					if (contents.includes('sourceMappingURL=')) {
+						contents = contents.replace(
+							/\/\/# sourceMappingURL=.*$/m,
+							`//# sourceMappingURL=${mapFileName}`
+						);
+					} else {
+						contents += `\n//# sourceMappingURL=${mapFileName}`;
+					}
+
+					fs.writeFileSync(jsPath, contents, 'utf8');
+					console.log(`✅ Updated sourceMappingURL in ${jsFile} → ${mapFileName}`);
+				} catch (err) {
+					console.error(`❌ Failed to update ${jsFile}: ${err.message}`);
+				}
 			}
 		}
 	};
@@ -41,6 +49,6 @@ function renameBootstrapMap() {
 export default defineConfig({
 	plugins: [
 		sveltekit(), 
-		renameBootstrapMap()
+		fixBootstrapSourceMapComment()
 	]
 });
