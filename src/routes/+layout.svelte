@@ -3,7 +3,8 @@
 	import '$lib/app.css';
 	import favicon from '$lib/assets/favicon.svg';
   	import scriptSrc from 'bootstrap/dist/js/bootstrap.bundle.js?url';
-	
+	import mapSrc from 'bootstrap/dist/js/bootstrap.bundle.js.map?url';
+
 	let { children } = $props();
 </script>
 
