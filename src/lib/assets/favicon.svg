@@ -1,24 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 384">
   <defs>
     <style>
-      .ink { stroke:#111; fill: none }
+      .outline {
+        stroke: #000;
+        fill: none;
+        stroke-width: 30;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
     </style>
   </defs>
 
   <!-- Triangle -->
-  <path d="M256 80 L80 432 L432 432 Z"
-        class="ink"
-        stroke-width="28"
-        stroke-linejoin="round"
-        stroke-linecap="round"/>
-
-  <!-- Eye ellipse (slightly smaller to fit inside triangle) -->
-  <ellipse cx="256" cy="300" rx="107" ry="50"
-           class="ink"
-           stroke-width="28"
-           stroke-linecap="round"
-           stroke-linejoin="round"/>
+  <path d="M192 36 L16 356 L368 356 Z" class="outline"/>
 
   <!-- Pupil -->
-  <circle cx="256" cy="300" r="30" class="ink" stroke-width="28"/>
+  <circle cx="192" cy="248" r="28" class="outline"/>
+
+  <!-- Eye ellipse -->
+  <ellipse cx="192" cy="248" rx="100" ry="45" class="outline"/>
 </svg>
