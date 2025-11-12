@@ -29,14 +29,29 @@ export async function POST({ request, params, platform }) {
 
         if (!postExists) return new Response('Post not found', { status: 404 });
 
-        // Insert comment (let DB assign created_at automatically)
         const result = await db
             .prepare(`INSERT INTO comments (post_id, user_id, body) VALUES (?, ?, ?)`)
             .bind(postId, user.id, text)
             .run();
 
-        // Return only the new comment ID
-        return json({ id: result.meta.last_row_id });
+        const newId = result.meta.last_row_id;
+
+        // Fetch the full comment with username + timestamp
+        const comment = await db
+            .prepare(`
+				SELECT 
+					c.id,
+					c.body,
+					c.created_at,
+					u.username
+				FROM comments AS c
+				JOIN users AS u ON c.user_id = u.id
+				WHERE c.id = ?
+			`)
+            .bind(newId)
+            .first();
+
+        return json(comment);
     } catch (err) {
         console.error('Comment error:', err);
         return new Response('Failed to post comment', { status: 500 });
