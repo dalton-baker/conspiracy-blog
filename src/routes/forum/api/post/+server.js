@@ -25,8 +25,7 @@ export async function POST({ request, platform }) {
     const email = request.headers.get('cf-access-authenticated-user-email');
     if (!email) return new Response('Unauthorized', { status: 401 });
 
-    const kv = platform.env.FORUM_KV;
-    const bucket = platform.env.BLOG_BUCKET; // optional if you need profiles
+    const db = platform.env.FORUM_DB;
     const body = await request.json();
 
     const title = body.title?.trim();
@@ -35,29 +34,18 @@ export async function POST({ request, platform }) {
     if (!title || !content)
         return new Response('Missing title or body', { status: 400 });
 
-    // Look up user ID from email
-    const userKey = `user:${email.toLowerCase()}`;
-    const authorId = await kv.get(userKey);
-    if (!authorId) return new Response('User not found', { status: 404 });
+    // Lookup user by email (COLLATE NOCASE ensures case-insensitive match)
+    const user = await db
+        .prepare(`SELECT id, username FROM users WHERE email = ?`)
+        .bind(email)
+        .first();
 
-    // Load user profile to grab username
-    const profileObj = await bucket.get(`forum/users/${authorId}.json`);
-    const profile = profileObj ? await profileObj.json() : null;
-    const username = profile?.username || 'Unknown';
+    if (!user) return new Response('User not found', { status: 404 });
 
-    const id = crypto.randomUUID().replace(/-/g, '');
-    const created = new Date().toISOString();
+    const result = await db
+        .prepare(`INSERT INTO posts (user_id, title, body) VALUES (?, ?, ?)`)
+        .bind(user.id, title, content)
+        .run();
 
-    const post = {
-        id,
-        title,
-        body: content,
-        authorId,
-        username,
-        created
-    };
-
-    await kv.put(`post:${id}`, JSON.stringify(post));
-
-    return json(post);
+    return json({ id: nresult.meta.last_row_idewId });
 }
