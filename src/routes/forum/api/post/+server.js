@@ -25,7 +25,7 @@ export async function POST({ request, platform }) {
     const email = request.headers.get('cf-access-authenticated-user-email');
     if (!email) return new Response('Unauthorized', { status: 401 });
 
-    const db = platform.env.FORUM_DB;
+    const db = platform.env.FORUM_D1;
     const body = await request.json();
 
     const title = body.title?.trim();

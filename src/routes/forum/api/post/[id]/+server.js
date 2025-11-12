@@ -1,7 +1,7 @@
 import { json } from '@sveltejs/kit';
 
 export async function GET({ params, platform }) {
-    const db = platform.env.FORUM_DB;
+    const db = platform.env.FORUM_D1;
     const { id } = params;
 
     // Fetch post with username
