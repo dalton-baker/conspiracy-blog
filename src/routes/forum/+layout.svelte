@@ -23,8 +23,6 @@
 			if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
 			const authData = await res.json();
-			console.log('authData', authData);
-
 			if (!authData || !authData.id) throw new Error('Not authenticated');
 
 			profile = authData;

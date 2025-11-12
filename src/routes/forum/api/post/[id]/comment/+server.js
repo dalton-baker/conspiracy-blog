@@ -1,3 +1,5 @@
+import { json } from '@sveltejs/kit';
+
 export async function POST({ request, params, platform }) {
     try {
         const email = request.headers.get('cf-access-authenticated-user-email');
