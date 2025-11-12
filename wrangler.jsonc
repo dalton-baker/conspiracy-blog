@@ -28,6 +28,13 @@
 			"binding": "FORUM_KV",
 			"id": "cc7c1866d9e6406abc87995a37541f38"
 		}
+	],
+	"d1_databases": [
+		{
+			"binding": "FORUM_D1",
+			"database_name": "conspiracy-forum",
+			"database_id": "5da30038-9e45-40a2-af79-3e823c02e5d4"
+		}
 	]
 	/**
 	 * Smart Placement
