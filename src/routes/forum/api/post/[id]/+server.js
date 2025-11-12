@@ -1,25 +1,44 @@
 import { json } from '@sveltejs/kit';
 
 export async function GET({ params, platform }) {
+    const db = platform.env.FORUM_DB;
     const { id } = params;
-    const kv = platform.env.FORUM_KV;
 
-    const postRaw = await kv.get(`post:${id}`);
-    if (!postRaw) return new Response('Not found', { status: 404 });
+    // Fetch post with username
+    const post = await db
+        .prepare(`
+			SELECT 
+				p.id,
+				p.title,
+				p.body,
+				u.username,
+				p.created_at
+			FROM posts AS p
+			LEFT JOIN users AS u ON p.user_id = u.id
+			WHERE p.id = ?
+		`)
+        .bind(id)
+        .first();
 
-    const post = JSON.parse(postRaw);
+    if (!post) return new Response('Not found', { status: 404 });
 
-    // Later: load comments
-    const commentsList = await kv.list({ prefix: `comment:${id}:` });
-    const comments = [];
+    // Fetch comments joined to usernames
+    const commentResults = await db
+        .prepare(`
+			SELECT 
+				c.id,
+				c.body,
+				u.username,
+				c.created_at
+			FROM comments AS c
+			LEFT JOIN users AS u ON c.user_id = u.id
+			WHERE c.post_id = ?
+			ORDER BY c.created_at ASC
+		`)
+        .bind(id)
+        .all();
 
-    for (const entry of commentsList.keys) {
-        const c = await kv.get(entry.name);
-        if (c) comments.push(JSON.parse(c));
-    }
-
-    comments.sort((a, b) => new Date(a.created) - new Date(b.created));
-    post.comments = comments;
+    post.comments = commentResults.results ?? [];
 
     return json(post);
 }
