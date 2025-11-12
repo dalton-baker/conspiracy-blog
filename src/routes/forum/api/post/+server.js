@@ -48,7 +48,7 @@ export async function POST({ request, platform }) {
             .bind(user.id, title, content)
             .run();
 
-        return json({ id: nresult.meta.last_row_idewId });
+        return json({ id: result.meta.last_row_idewId });
     } catch (err) {
         console.error('Comment error:', err);
         return new Response('Failed to create post', { status: 500 });
