@@ -124,7 +124,7 @@
 							<h5 class="fw-semibold mb-1">{post.title}</h5>
 							<small class="text-secondary">
 								<span class="fw-semibold" style="color: {colorForUser(post.username)}">{post.username}</span>
-								• {new Date(post.created).toLocaleString()}
+								• {new Date(post.created_at).toLocaleString()}
 							</small>
 						</div>
 					</a>

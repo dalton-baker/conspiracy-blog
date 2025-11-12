@@ -1,22 +1,24 @@
 import { json } from '@sveltejs/kit';
 
 export async function GET({ platform }) {
-    const kv = platform.env.FORUM_KV;
-    const list = await kv.list({ prefix: 'post:' });
+    const db = platform.env.FORUM_D1;
 
-    const posts = [];
+    // grab all posts joined to their user names, newest first
+    const result = await db
+        .prepare(`
+			SELECT 
+				p.id,
+				p.title,
+				u.username,
+				p.created_at
+			FROM posts AS p
+			LEFT JOIN users AS u ON p.user_id = u.id
+			ORDER BY p.created_at DESC
+		`)
+        .all();
 
-    for (const entry of list.keys) {
-        const raw = await kv.get(entry.name);
-        if (!raw) continue;
-        const post = JSON.parse(raw);
-        posts.push(post);
-    }
-
-    // sort newest first
-    posts.sort((a, b) => new Date(b.created) - new Date(a.created));
-
-    return json(posts);
+    // result.results holds rows when using .all()
+    return json(result.results ?? []);
 }
 
 export async function POST({ request, platform }) {
