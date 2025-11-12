@@ -1,0 +1,9 @@
+npx wrangler kv key list --namespace-id=cc7c1866d9e6406abc87995a37541f38 --remote --persist-to=./dump/keys.json
+
+Get-Content ./dump/keys.json |
+   ConvertFrom-Json |
+   ForEach-Object { $_.name } |
+   ConvertTo-Json |
+   Set-Content ./dump/keys-array.json
+
+npx wrangler kv bulk get ./dump/keys-array.json --namespace-id=cc7c1866d9e6406abc87995a37541f38 --remote --persist-to=./dump/values.json
