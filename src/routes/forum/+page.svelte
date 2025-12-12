@@ -118,13 +118,12 @@
 			{#each posts as post, i}
 				<div>
 					<a href="/forum/post?id={post.id}" class="text-decoration-none text-light">
-						<div
-							class="py-3 px-2 border-start border-3 post-hover"
-						>
+						<div class="py-3 px-2 border-start border-3 post-hover">
 							<h5 class="fw-semibold mb-1">{post.title}</h5>
 							<small class="text-secondary">
 								<span class="fw-semibold" style="color: {colorForUser(post.username)}">{post.username}</span>
-								• {new Date(post.created_at).toLocaleString()}
+								• {new Date(post.last_comment_at ?? post.created_at).toLocaleString()}
+								• {post.comment_count} comment{post.comment_count === 1 ? '' : 's'}
 							</small>
 						</div>
 					</a>
