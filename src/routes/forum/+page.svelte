@@ -120,10 +120,16 @@
 					<a href="/forum/post?id={post.id}" class="text-decoration-none text-light">
 						<div class="py-3 px-2 border-start border-3 post-hover">
 							<h5 class="fw-semibold mb-1">{post.title}</h5>
-							<small class="text-secondary">
-								<span class="fw-semibold" style="color: {colorForUser(post.username)}">{post.username}</span>
-								• {new Date(post.last_comment_at ?? post.created_at).toLocaleString()}
-								• {post.comment_count} comment{post.comment_count === 1 ? '' : 's'}
+							<small class="text-secondary d-flex flex-wrap gap-1">
+								<span class="fw-semibold text-nowrap" style="color: {colorForUser(post.username)}">
+									{post.username}
+								</span>
+								<span class="text-nowrap">
+									• {new Date(post.last_comment_at ?? post.created_at).toLocaleString()}
+								</span>
+								<span class="text-nowrap">
+									• {post.comment_count} comment{post.comment_count === 1 ? '' : 's'}
+								</span>
 							</small>
 						</div>
 					</a>
