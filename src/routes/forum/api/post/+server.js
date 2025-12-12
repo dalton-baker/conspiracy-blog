@@ -23,8 +23,7 @@ export async function GET({ platform }) {
                 u.username,
                 p.created_at
             ORDER BY
-                last_comment_at DESC NULLS LAST,
-                p.created_at DESC
+                COALESCE(MAX(c.created_at), p.created_at) DESC
         `)
         .all();
 
