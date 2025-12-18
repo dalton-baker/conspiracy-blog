@@ -24,7 +24,7 @@
         }
 
         try {
-            const res = await fetch(`/forum/api/post/${postId}`);
+            const res = await fetch(`/api/forum/post/${postId}`);
             if (!res.ok){
                 error = 'Failed to load post.';
             }else{
@@ -43,7 +43,7 @@
 		commentError = '';
 		submitting = true;
 		try {
-			const res = await fetch(`/forum/api/post/${postId}/comment`, {
+			const res = await fetch(`/api/forum/post/${postId}/comment`, {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ body: commentText })

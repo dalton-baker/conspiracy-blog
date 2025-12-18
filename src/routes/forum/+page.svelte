@@ -31,7 +31,7 @@
 		loading = true;
 		error = '';
 		try {
-			const res = await fetch('/forum/api/post');
+			const res = await fetch('/api/forum/post');
 			if (!res.ok) throw new Error(`HTTP ${res.status}`);
 			posts = await res.json();
 		} catch (err) {
@@ -54,7 +54,7 @@
 		postError = '';
 		posting = true;
 		try {
-			const res = await fetch('/forum/api/post', {
+			const res = await fetch('/api/forum/post', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ title, body })

@@ -10,7 +10,7 @@
 		const reloadCount = parseInt(sessionStorage.getItem('authReloadCount') || '0', 10);
 
 		try {
-			const res = await fetch('/admin/api', { cache: 'no-store' });
+			const res = await fetch('/api/admin', { cache: 'no-store' });
 
 			// If it failed outright or returned bad JSON, bail early
 			if (!res.ok) throw new Error(`HTTP ${res.status}`);

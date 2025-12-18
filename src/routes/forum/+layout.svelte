@@ -19,7 +19,7 @@
 		const reloadCount = parseInt(sessionStorage.getItem('authReloadCount') || '0', 10);
 
 		try {
-			const res = await fetch('/forum/api', { cache: 'no-store' });
+			const res = await fetch('/api/forum', { cache: 'no-store' });
 			if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
 			const authData = await res.json();
@@ -52,7 +52,7 @@
 
 	async function saveUsername() {
 		try {
-			const res = await fetch('/forum/api', {
+			const res = await fetch('/api/forum', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ username })
