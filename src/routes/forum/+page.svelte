@@ -1,5 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
 	import { forumState } from './state.svelte.js';
 	import { Modal } from 'bootstrap';
     import { colorForUser, getRandomColor } from '$lib';
@@ -27,6 +28,13 @@
 			keyboard: false
 		});
 	});
+
+	async function handleLogout() {
+		await supabase.auth.signOut();
+		forumState.userId = null;
+		forumState.username = null;
+		goto('/');
+	}
 
 	async function loadPosts() {
 		loading = true;
@@ -104,6 +112,9 @@
 		<p class="text-secondary mb-0">Here’s what’s buzzing on the forum.</p>
 	</div>
 	<div class="text-end flex-shrink-0">
+		<button class="btn btn-outline-light btn-sm" onclick={handleLogout}>
+			Logout
+		</button>
 		<button class="btn btn-outline-info fw-semibold w-100 w-sm-auto" onclick={openModal}>
 			New Post
 		</button>

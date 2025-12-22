@@ -3,7 +3,6 @@
 	import { goto } from '$app/navigation';
 	import { forumState } from './state.svelte.js';
 	import { supabase } from '$lib/supabaseClient.js';
-	import { navbarState } from '$lib/navbarState.svelte.js';
 	import UsernameModal from './UsernameModal.svelte';
 	import AuthModal from './AuthModal.svelte';
 
@@ -11,13 +10,6 @@
 	let showUsernameModal = $state(false);
 	let showLoginModal = $state(false);
 	let authSession = $state(null);
-
-	async function handleLogout() {
-		await supabase.auth.signOut();
-		forumState.userId = null;
-		forumState.username = null;
-		goto('/');
-	}
 
 	async function loadUserData() {
 		try {
@@ -50,10 +42,6 @@
 		}
 	}
 
-	$effect(() => {
-		navbarState.customActions = navbarActions;
-	});
-
 	onMount(async () => {
 		const { data: { session } } = await supabase.auth.getSession();
 		console.log('Current session on mount:', session);
@@ -65,19 +53,7 @@
 			await loadUserData();
 		}
 	});
-
-	onDestroy(() => {
-		navbarState.customActions = null;
-	});
 </script>
-
-{#snippet navbarActions()}
-	{#if authSession}
-		<button class="btn btn-outline-light btn-sm" onclick={handleLogout}>
-			Logout
-		</button>
-	{/if}
-{/snippet}
 
 {#if forumState.username}
 	{@render children()}
