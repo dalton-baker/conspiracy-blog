@@ -53,6 +53,11 @@
 			await loadUserData();
 		}
 	});
+
+	onDestroy(() => {
+		showUsernameModal = false;
+		showLoginModal = false;
+	});
 </script>
 
 {#if forumState.username}
