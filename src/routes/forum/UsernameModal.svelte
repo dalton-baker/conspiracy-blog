@@ -1,5 +1,5 @@
 <script>
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import { Modal } from 'bootstrap';
 	import { forumState } from './state.svelte.js';
 	import { supabase } from '$lib/supabaseClient.js';
@@ -19,6 +19,10 @@
 			backdrop: 'static',
 			keyboard: false
 		});
+	});
+
+	onDestroy(() => {
+		modalInstance.hide();
 	});
 
     $effect(() => {

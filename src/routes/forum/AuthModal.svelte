@@ -1,5 +1,5 @@
 <script>
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
 	import { Modal } from 'bootstrap';
 	import { supabase } from '$lib/supabaseClient.js';
 
@@ -30,6 +30,10 @@
 		return () => {
 			if (cooldownInterval) clearInterval(cooldownInterval);
 		};
+	});
+
+	onDestroy(() => {
+		modalInstance.hide();
 	});
 
 	$effect(() => {

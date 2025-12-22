@@ -1,5 +1,5 @@
 <script>
-	import { onMount, onDestroy } from 'svelte';
+	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { forumState } from './state.svelte.js';
 	import { supabase } from '$lib/supabaseClient.js';
@@ -52,11 +52,6 @@
 		else {
 			await loadUserData();
 		}
-	});
-
-	onDestroy(() => {
-		showUsernameModal = false;
-		showLoginModal = false;
 	});
 </script>
 
