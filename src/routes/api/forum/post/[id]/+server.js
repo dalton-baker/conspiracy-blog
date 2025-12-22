@@ -1,4 +1,5 @@
 import { json } from '@sveltejs/kit';
+import { getAuthenticatedEmail } from '$lib/serverAuth.js';
 
 export async function GET({ request, params, platform }) {
 	const email = await getAuthenticatedEmail(request);
