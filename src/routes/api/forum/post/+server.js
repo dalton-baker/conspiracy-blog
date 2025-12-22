@@ -10,14 +10,25 @@ export async function GET({ request, platform }) {
     // grab all posts joined to their user names, newest first
     const result = await db
         .prepare(`
-			SELECT 
-				p.id,
-				p.title,
-				u.username,
-				p.created_at
-			FROM posts AS p
-			LEFT JOIN users AS u ON p.user_id = u.id
-			ORDER BY p.created_at DESC
+			SELECT
+                p.id,
+                p.title,
+                u.username,
+                p.created_at,
+                MAX(c.created_at) AS last_comment_at,
+                COUNT(c.id) AS comment_count
+            FROM posts AS p
+            LEFT JOIN users AS u
+                ON p.user_id = u.id
+            LEFT JOIN comments AS c
+                ON c.post_id = p.id
+            GROUP BY
+                p.id,
+                p.title,
+                u.username,
+                p.created_at
+            ORDER BY
+                COALESCE(MAX(c.created_at), p.created_at) DESC
 		`)
         .all();
 
