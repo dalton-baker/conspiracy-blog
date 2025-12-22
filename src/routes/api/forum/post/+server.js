@@ -14,7 +14,7 @@ export async function GET({ request, platform }) {
                 p.id,
                 p.title,
                 u.username,
-                COALESCE(MAX(c.created_at), p.created_at) AS last_activity_at,
+                unixepoch(COALESCE(MAX(c.created_at), p.created_at)) AS last_activity_at,
                 COUNT(c.id) AS comment_count
             FROM posts AS p
             LEFT JOIN users AS u

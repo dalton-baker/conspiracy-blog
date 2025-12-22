@@ -135,7 +135,7 @@
 									{post.username}
 								</span>
 								<span class="text-nowrap">
-									• {post.last_activity_at}
+									• {new Date(post.last_activity_at).toLocaleString()}
 								</span>
 								<span class="text-nowrap">
 									• {post.comment_count} comment{post.comment_count === 1 ? '' : 's'}
