@@ -103,28 +103,19 @@
 </script>
 
 <div class="container py-4 text-light">
-	<div class="d-flex justify-content-between align-items-start mb-5 gap-3">
-		<div>
+	<div class="d-flex flex-wrap justify-content-between align-items-center mb-5 gap-3">
+		<div class="flex-grow-1">
 			<h3 class="fw-semibold mb-1">
 				Welcome, <span style="color: {colorForUser(forumState.username)}">{forumState.username}</span>
 			</h3>
 			<p class="text-secondary mb-0">Here’s what’s buzzing on the forum.</p>
 		</div>
-
-		<div class="d-flex align-items-center gap-2">
-			<button
-				class="btn btn-outline-light btn-sm"
-				title="Logout"
-				onclick={handleLogout}
-			>
-				<i class="fa-solid fa-right-from-bracket"></i>
-			</button>
-
-			<button
-				class="btn btn-outline-info fw-semibold"
-				onclick={openModal}
-			>
+		<div class="flex-shrink-0 d-flex gap-2 flex-column justify-content-center">
+			<button class="btn btn-outline-info fw-semibold w-100 w-sm-auto" onclick={openModal}>
 				New Post
+			</button>
+			<button class="btn btn-outline-light btn-sm" onclick={handleLogout}>
+				Logout
 			</button>
 		</div>
 	</div>
