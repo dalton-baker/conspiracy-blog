@@ -31,7 +31,7 @@ export async function GET({ request, platform }) {
     // Existing user → update their last login
     await db
         .prepare(`UPDATE users SET last_login = ? WHERE id = ?`)
-        .bind(new Date().toISOString(), existing.id)
+        .bind(Date.now(), existing.id)
         .run();
 
     return json(existing);

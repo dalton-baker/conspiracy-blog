@@ -16,7 +16,7 @@ export async function GET({ request, params, platform }) {
 				p.title,
 				p.body,
 				u.username,
-				unixepoch(p.created_at) * 1000 AS created_at
+				p.created_at
 			FROM posts AS p
 			LEFT JOIN users AS u ON p.user_id = u.id
 			WHERE p.id = ?
@@ -33,7 +33,7 @@ export async function GET({ request, params, platform }) {
 				c.id,
 				c.body,
 				u.username,
-				unixepoch(c.created_at) * 1000 AS created_at
+				c.created_at
 			FROM comments AS c
 			LEFT JOIN users AS u ON c.user_id = u.id
 			WHERE c.post_id = ?
