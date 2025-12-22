@@ -43,7 +43,7 @@ export async function POST({ request, params, platform }) {
 				SELECT 
 					c.id,
 					c.body,
-					c.created_at,
+					unixepoch(c.created_at) * 1000 AS created_at,
 					u.username
 				FROM comments AS c
 				JOIN users AS u ON c.user_id = u.id
