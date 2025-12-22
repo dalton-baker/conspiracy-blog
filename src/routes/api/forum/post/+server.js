@@ -14,8 +14,7 @@ export async function GET({ request, platform }) {
                 p.id,
                 p.title,
                 u.username,
-                p.created_at,
-                MAX(c.created_at) AS last_comment_at,
+                COALESCE(MAX(c.created_at), p.created_at) AS last_activity_at,
                 COUNT(c.id) AS comment_count
             FROM posts AS p
             LEFT JOIN users AS u
@@ -28,7 +27,7 @@ export async function GET({ request, platform }) {
                 u.username,
                 p.created_at
             ORDER BY
-                COALESCE(MAX(c.created_at), p.created_at) DESC
+                last_activity_at DESC
 		`)
         .all();
 
