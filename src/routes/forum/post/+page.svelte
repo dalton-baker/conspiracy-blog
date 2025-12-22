@@ -3,6 +3,7 @@
     import { onMount } from 'svelte';
     import { colorForUser } from '$lib';
     import { renderMarkdown } from '$lib/markdown'
+	import { supabase } from '$lib/supabaseClient.js';
 
     let post = null;
     let error = '';
@@ -24,7 +25,12 @@
         }
 
         try {
-            const res = await fetch(`/api/forum/post/${postId}`);
+			const { data: { session } } = await supabase.auth.getSession();
+            const res = await fetch(`/api/forum/post/${postId}`, {
+				headers: {
+					'Authorization': `Bearer ${session.access_token}`
+				}
+			});
             if (!res.ok){
                 error = 'Failed to load post.';
             }else{
@@ -43,9 +49,13 @@
 		commentError = '';
 		submitting = true;
 		try {
+			const { data: { session } } = await supabase.auth.getSession();
 			const res = await fetch(`/api/forum/post/${postId}/comment`, {
 				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
+				headers: { 
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${session.access_token}`
+				},
 				body: JSON.stringify({ body: commentText })
 			});
 

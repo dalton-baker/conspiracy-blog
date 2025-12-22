@@ -1,8 +1,8 @@
 import { json } from '@sveltejs/kit';
+import { getAuthenticatedEmail } from '$lib/serverAuth.js';
 
 export async function GET({ request, platform }) {
-    // 🔐 Make sure Cloudflare Access injected the user email
-    const email = request.headers.get('cf-access-authenticated-user-email');
+    const email = await getAuthenticatedEmail(request);
     if (!email) return new Response('Unauthorized', { status: 401 });
 
     const db = platform.env.FORUM_D1;
@@ -38,7 +38,7 @@ export async function GET({ request, platform }) {
 }
 
 export async function POST({ request, platform }) {
-    const email = request.headers.get('cf-access-authenticated-user-email');
+    const email = await getAuthenticatedEmail(request);
     if (!email) return new Response('Unauthorized', { status: 401 });
 
     const db = platform.env.FORUM_D1;

@@ -4,6 +4,7 @@
 	import favicon from '$lib/assets/favicon.svg';
   	import scriptSrc from 'bootstrap/dist/js/bootstrap.bundle.min.js?url';
 	import mapSrc from 'bootstrap/dist/js/bootstrap.bundle.min.js.map?url';
+	import { navbarState } from '$lib/navbarState.svelte.js';
 
 	let { children } = $props();
 </script>
@@ -34,7 +35,11 @@
 			<span class="fw-semibold">Dalton’s Department of Truth</span>
 		</a>
 		<div class="ms-auto">
-			<a href="/forum" class="btn btn-outline-light btn-sm">Forum</a>
+			{#if navbarState.customActions}
+				{@render navbarState.customActions()}
+			{:else}
+				<a href="/forum" class="btn btn-outline-light btn-sm">Forum</a>
+			{/if}
 		</div>
 	</div>
 </nav>

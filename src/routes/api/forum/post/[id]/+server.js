@@ -1,6 +1,9 @@
 import { json } from '@sveltejs/kit';
 
-export async function GET({ params, platform }) {
+export async function GET({ request, params, platform }) {
+	const email = await getAuthenticatedEmail(request);
+	if (!email) return new Response('Unauthorized', { status: 401 });
+	
     const db = platform.env.FORUM_D1;
     const { id } = params;
 

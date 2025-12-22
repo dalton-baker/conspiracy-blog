@@ -1,143 +1,87 @@
 <script>
-	import { onMount } from 'svelte';
-	import { Modal } from 'bootstrap';
+	import { onMount, onDestroy } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { forumState } from './state.svelte.js';
+	import { supabase } from '$lib/supabaseClient.js';
+	import { navbarState } from '$lib/navbarState.svelte.js';
+	import UsernameModal from './UsernameModal.svelte';
+	import AuthModal from './AuthModal.svelte';
 
-	let { children } = $props();
-	const maxReloadCount = 1;
-	let authenticated = $state(false);
-	let profile = $state(null);
-	let modalEl = $state(null);
+	let { children, data } = $props();
+	let showUsernameModal = $state(false);
+	let showLoginModal = $state(false);
+	let authSession = $state(null);
 
-	let username = $state('');
-	let message = $state('');
-	let error = $state('');
-	let saving = $state(false);
+	async function handleLogout() {
+		await supabase.auth.signOut();
+		forumState.userId = null;
+		forumState.username = null;
+		goto('/');
+	}
 
-	onMount(async () => {
-		const reloadCount = parseInt(sessionStorage.getItem('authReloadCount') || '0', 10);
-
+	async function loadUserData() {
 		try {
-			const res = await fetch('/api/forum', { cache: 'no-store' });
-			if (!res.ok) throw new Error(`HTTP ${res.status}`);
+			const { data: { session } } = await supabase.auth.getSession();
+			authSession = session;
+
+			const res = await fetch('/api/forum', { 
+				cache: 'no-store',
+				headers: {
+					'Authorization': `Bearer ${session.access_token}`
+				}
+			});
+			
+			if (!res.ok) {
+				throw new Error(`HTTP ${res.status}`);
+			}
 
 			const authData = await res.json();
 			if (!authData || !authData.id) throw new Error('Not authenticated');
 
-			profile = authData;
 			forumState.userId = authData.id;
 			forumState.username = authData.username;
 
 			if (!forumState.username) {
-				new Modal(modalEl, {
-					backdrop: 'static',
-					keyboard: false
-				}).show();
+				showUsernameModal = true;
 			}
-
-			sessionStorage.removeItem('authReloadCount');
 		} catch (error) {
-			console.warn('Auth check failed:', error);
+			console.error('Failed to load user data:', error);
+			showLoginModal = true;
+		}
+	}
 
-			if (reloadCount < maxReloadCount) {
-				sessionStorage.setItem('authReloadCount', reloadCount + 1);
-				window.location.reload();
-			} else {
-				sessionStorage.removeItem('authReloadCount');
-				goto('/');
-			}
+	$effect(() => {
+		navbarState.customActions = navbarActions;
+	});
+
+	onMount(async () => {
+		const { data: { session } } = await supabase.auth.getSession();
+		console.log('Current session on mount:', session);
+
+		if (!session) {
+			showLoginModal = true;
+		}
+		else {
+			await loadUserData();
 		}
 	});
 
-	async function saveUsername() {
-		try {
-			const res = await fetch('/api/forum', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ username })
-			});
-
-			const text = await res.text();
-			let data;
-
-			try {
-				data = JSON.parse(text);
-			} catch {
-				// not JSON, use text directly
-				data = { message: text };
-			}
-
-			if (!res.ok) {
-				error = data?.message || text || `Error ${res.status}`;
-				return;
-			}
-
-			// success
-			forumState.username = data.username;
-			Modal.getInstance(modalEl).hide();
-			message = `Welcome, ${data.username}!`;
-			setTimeout(() => Modal.getInstance(modalEl).hide(), 1000);
-		} catch (err) {
-			error = err.message || 'Error saving username';
-		} finally {
-			saving = false;
-		}
-	}
+	onDestroy(() => {
+		navbarState.customActions = null;
+	});
 </script>
+
+{#snippet navbarActions()}
+	{#if authSession}
+		<button class="btn btn-outline-light btn-sm" onclick={handleLogout}>
+			Logout
+		</button>
+	{/if}
+{/snippet}
 
 {#if forumState.username}
 	{@render children()}
-{:else}
-<div
-	class="modal fade"
-	bind:this={modalEl}
-	tabindex="-1"
-	aria-hidden="true"
-	data-bs-backdrop="static"
-	data-bs-keyboard="false"
->
-	<div class="modal-dialog modal-dialog-centered">
-		<div class="modal-content bg-dark text-light border-light shadow-lg">
-			<div class="modal-header border-secondary">
-				<h5 class="modal-title" id="usernameModalLabel">Choose a Username</h5>
-			</div>
-			<div class="modal-body">
-				<p class="text-secondary mb-3">
-					You need to set a username before posting or replying.
-				</p>
-
-				<form onsubmit="{saveUsername}">
-					<div class="mb-3">
-						<input
-							bind:value={username}
-							class="form-control bg-dark text-light border-secondary"
-							placeholder="Enter a username"
-							minlength="3"
-							maxlength="30"
-							required
-						/>
-					</div>
-
-					{#if message}
-						<div class="alert alert-success py-2">{message}</div>
-					{/if}
-
-					{#if error}
-						<div class="alert alert-danger py-2">{error}</div>
-					{/if}
-
-					<button class="btn btn-primary w-100" disabled={saving}>
-						{#if saving}
-							<span class="spinner-border spinner-border-sm me-2"></span>
-							Saving...
-						{:else}
-							Save
-						{/if}
-					</button>
-				</form>
-			</div>
-		</div>
-	</div>
-</div>
 {/if}
+
+<UsernameModal show={showUsernameModal} />
+<AuthModal show={showLoginModal} onAuthenticated={loadUserData} />
