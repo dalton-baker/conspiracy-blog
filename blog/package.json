@@ -19,5 +19,8 @@
 		"svelte": "^5.45.6",
 		"vite": "^7.2.6",
 		"wrangler": "^4.60.0"
+	},
+	"dependencies": {
+		"bootstrap": "^5.3.8"
 	}
 }
