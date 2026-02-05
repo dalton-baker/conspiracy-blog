@@ -49,7 +49,7 @@
                         <p class="card-text flex-grow-1">{article.summary}</p>
                         <div class="mt-3">
                             <small class="text-warning">{formatDate(article.date)}</small><br>
-                            <a href="{`article?id=${article.id}`}" class="btn btn-outline-light btn-sm mt-2 stretched-link">Read More</a>
+                            <a href="{`article/${article.id}`}" class="btn btn-outline-light btn-sm mt-2 stretched-link">Read More</a>
                         </div>
                     </div>
                 </div>
