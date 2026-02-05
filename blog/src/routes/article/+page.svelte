@@ -36,6 +36,13 @@
 		}
 	});
 </script>
+
+<svelte:head>
+	{#if article}
+		<title>{article.title} - Dalton’s Department of Truth</title>
+	{/if}
+</svelte:head>
+
 <div class="d-flex justify-content-center w-100">
     {#if loading}
         <div class="text-center py-5">
