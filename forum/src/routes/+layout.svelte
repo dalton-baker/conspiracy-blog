@@ -6,11 +6,10 @@
 	import UsernameModal from './UsernameModal.svelte';
 	import AuthModal from './AuthModal.svelte';
 
-	import 'bootstrap/dist/css/bootstrap.min.css';
-	import '$lib/app.css';
 	import favicon from '$lib/assets/favicon.svg';
   	import scriptSrc from 'bootstrap/dist/js/bootstrap.bundle.min.js?url';
-	import mapSrc from 'bootstrap/dist/js/bootstrap.bundle.min.js.map?url';
+	import 'bootstrap/dist/css/bootstrap.min.css';
+	import '$lib/app.css';
 
 	let { children } = $props();
 	let showUsernameModal = $state(false);
@@ -63,7 +62,6 @@
 
 
 <svelte:head>
-	<link rel="icon" href={favicon} />
 	<style>
 		.navbar-brand img {
 			height: 32px;
@@ -86,14 +84,16 @@
 			<img src="{favicon}" alt="All-Seeing Eye Logo">
 			<span class="fw-semibold">Dalton’s Department of Truth</span>
 		</a>
-		<div class="ms-auto">
+		<!-- <div class="ms-auto">
 			<a href="/forum" class="btn btn-outline-light btn-sm">Go Deeper</a>
-		</div>
+		</div> -->
 	</div>
 </nav>
 
 <main class="container my-5 flex-grow-1">
+{#if forumState.username}
 	{@render children()}
+{/if}
 </main>
 
 <footer class="bg-secondary text-center text-light py-3 mt-auto">
