@@ -11,7 +11,6 @@
 <svelte:head>
 	{#if article}
 		<title>{article.title} - Dalton's Department of Truth</title>
-		<link rel="preload" as="image" href={article.imageSrc} />
 	{/if}
 </svelte:head>
 
