@@ -16,7 +16,17 @@
 	},
 	"observability": {
 		"enabled": true
-	}
+	},
+	// npx wrangler d1 migrations create conspiracy-forum migration_name
+	// npx wrangler d1 migrations apply conspiracy-forum --local
+	// npx wrangler d1 migrations apply conspiracy-forum --remote
+	"d1_databases": [
+		{
+			"binding": "FORUM_D1",
+			"database_name": "conspiracy-forum",
+			"database_id": "bed1e905-71da-4a9b-8f35-4eeae65d2213"
+		}
+	]
 	/**
 	 * Smart Placement
 	 * https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
