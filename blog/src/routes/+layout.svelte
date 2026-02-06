@@ -51,6 +51,6 @@
 			· <a href="https://daltonsbaker.com/privacyPolicy" target="_blank"
 				class="text-light text-decoration-none">Disclaimer</a>
 		</p>
-		<p class="mb-2">© 2025 Dalton’s Department of Truth</p>
+		<p class="mb-2">© 2025 Dalton's Department of Truth</p>
 	</div>
 </footer>
