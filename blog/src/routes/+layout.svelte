@@ -31,7 +31,7 @@
 	<div class="container d-flex align-items-center">
 		<a class="navbar-brand d-flex align-items-center" href="/">
 			<img src="{favicon}" alt="All-Seeing Eye Logo">
-			<span class="fw-semibold">Dalton’s Department of Truth</span>
+			<span class="fw-semibold">Dalton's Department of Truth</span>
 		</a>
 		<div class="ms-auto">
 			<a href="https://truth-forum.dalt.dev/" class="btn btn-outline-light btn-sm">Go Deeper</a>

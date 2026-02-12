@@ -97,13 +97,13 @@
 
 <div class="container py-4 text-light">
 	<div class="d-flex flex-wrap justify-content-between align-items-center mb-5 gap-3">
-		<div class="flex-grow-1">
+		<div>
 			<h3 class="fw-semibold mb-1">
 				Welcome, <span style="color: {colorForUser(forumState.username)}">{forumState.username}</span>
 			</h3>
-			<p class="text-secondary mb-0">Here’s what’s buzzing on the forum.</p>
+			<p class="text-secondary mb-0">Here's what's buzzing on the forum.</p>
 		</div>
-		<button class="btn btn-outline-info fw-semibold w-100 w-sm-auto" onclick={openModal}>
+		<button class="btn btn-outline-info fw-semibold" onclick={openModal}>
 			New Post
 		</button>
 	</div>
