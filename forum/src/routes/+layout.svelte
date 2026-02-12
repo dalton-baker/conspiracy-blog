@@ -58,6 +58,13 @@
 			await loadUserData();
 		}
 	});
+
+	async function handleLogout() {
+		await supabase.auth.signOut();
+		forumState.userId = null;
+		forumState.username = null;
+		goto('https://truth.dalt.dev');
+	}
 </script>
 
 
@@ -84,9 +91,9 @@
 			<img src="{favicon}" alt="All-Seeing Eye Logo">
 			<span class="fw-semibold">Dalton’s Department of Truth</span>
 		</a>
-		<!-- <div class="ms-auto">
-			<a href="/forum" class="btn btn-outline-light btn-sm">Go Deeper</a>
-		</div> -->
+		<button class="btn btn-outline-light btn-sm" onclick={handleLogout}>
+			Logout
+		</button>
 	</div>
 </nav>
 

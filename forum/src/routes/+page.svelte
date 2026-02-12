@@ -29,13 +29,6 @@
 		});
 	});
 
-	async function handleLogout() {
-		await supabase.auth.signOut();
-		forumState.userId = null;
-		forumState.username = null;
-		goto('/');
-	}
-
 	async function loadPosts() {
 		loading = true;
 		error = '';
@@ -110,14 +103,9 @@
 			</h3>
 			<p class="text-secondary mb-0">Here’s what’s buzzing on the forum.</p>
 		</div>
-		<div class="flex-shrink-0 d-flex gap-2 flex-column justify-content-center">
-			<button class="btn btn-outline-info fw-semibold w-100 w-sm-auto" onclick={openModal}>
-				New Post
-			</button>
-			<button class="btn btn-outline-light btn-sm" onclick={handleLogout}>
-				Logout
-			</button>
-		</div>
+		<button class="btn btn-outline-info fw-semibold w-100 w-sm-auto" onclick={openModal}>
+			New Post
+		</button>
 	</div>
 
 	<!-- Posts Section -->
