@@ -63,7 +63,7 @@
 		await supabase.auth.signOut();
 		forumState.userId = null;
 		forumState.username = null;
-		goto('https://truth.dalt.dev');
+		window.location.assign("https://truth.dalt.dev");
 	}
 </script>
 
