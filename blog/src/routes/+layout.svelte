@@ -34,7 +34,7 @@
 			<span class="fw-semibold">Dalton's Department of Truth</span>
 		</a>
 		<div class="ms-auto">
-			<a href="https://truth-forum.dalt.dev/" class="btn btn-outline-light btn-sm">Go Deeper</a>
+			<a href="https://truth-forum.dalt.dev/" class="btn btn-outline-light btn-sm">Find the Truth</a>
 		</div>
 	</div>
 </nav>
