@@ -5,7 +5,6 @@
 	import { Modal } from 'bootstrap';
     import { colorForUser, getRandomColor } from '$lib';
     import { renderMarkdown } from '$lib/markdown'
-	import { supabase } from '$lib/supabaseClient.js';
 
 	let posts = [];
 	let loading = true;
@@ -33,12 +32,7 @@
 		loading = true;
 		error = '';
 		try {
-            const { data: { session } } = await supabase.auth.getSession();
-			const res = await fetch('/api/post', {
-				headers: {
-					'Authorization': `Bearer ${session.access_token}`
-				}
-			});
+			const res = await fetch('/api/post');
 			if (!res.ok) throw new Error(`HTTP ${res.status}`);
 			posts = await res.json();
 		} catch (err) {
@@ -61,13 +55,9 @@
 		postError = '';
 		posting = true;
 		try {
-			const { data: { session } } = await supabase.auth.getSession();
 			const res = await fetch('/api/post', {
 				method: 'POST',
-				headers: { 
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${session.access_token}`
-                 },
+				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ title, body })
 			});
 

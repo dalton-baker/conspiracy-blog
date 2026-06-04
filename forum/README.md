@@ -36,3 +36,37 @@ npm run build
 You can preview the production build with `npm run preview`.
 
 > To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+
+## Authentication
+
+The forum uses its own passwordless, email-code login (no third-party auth):
+
+1. User enters their email → `POST /api/auth/request` emails a 6-digit code
+   (valid 15 minutes, single-use, rate limited per email and per IP).
+2. User enters the code → `POST /api/auth/verify` checks it and sets an
+   httpOnly, Secure session cookie (`dot_session`, ~30 days).
+3. `POST /api/auth/logout` destroys the session.
+
+Login codes and session tokens are only ever stored **hashed** in D1. Email is
+the link between a session and the existing `users` table.
+
+### One-time setup
+
+1. **Database** — apply the auth migration:
+   ```sh
+   npx wrangler d1 migrations apply conspiracy-forum --remote
+   ```
+2. **Email Sending** — in the Cloudflare dashboard, onboard the sending domain
+   under **Email → Email Sending** (auto-creates SPF/DKIM/DMARC/MX records on a
+   `cf-bounce` subdomain). The `from` address in `AUTH_FROM_EMAIL`
+   (`noreply@truth.dalt.dev`) must live on that verified domain.
+   See https://developers.cloudflare.com/email-service/get-started/send-emails/
+3. **Secret** — set the hashing pepper:
+   ```sh
+   npx wrangler secret put AUTH_SECRET
+   ```
+   For local dev, copy `.dev.vars.example` to `.dev.vars`.
+
+> Email Sending requires the **Workers Paid** plan and runs against the live
+> service even in local dev (`wrangler dev` with remote bindings) — there is no
+> sandbox, so test sends go to real inboxes.

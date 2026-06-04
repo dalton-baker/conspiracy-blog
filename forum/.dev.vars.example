@@ -1,0 +1,7 @@
+# Copy to .dev.vars for local development (this file is committed; .dev.vars is not).
+# Pepper mixed into login-code and session-token hashes. Use a long random value.
+# In production set it as a secret instead: npx wrangler secret put AUTH_SECRET
+AUTH_SECRET="change-me-to-a-long-random-string"
+
+# Optional override for the login email sender (defaults to wrangler.jsonc vars).
+# AUTH_FROM_EMAIL="noreply@truth.dalt.dev"

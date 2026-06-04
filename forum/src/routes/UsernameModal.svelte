@@ -2,7 +2,6 @@
 	import { onMount, onDestroy } from 'svelte';
 	import { Modal } from 'bootstrap';
 	import { forumState } from './state.svelte.js';
-	import { supabase } from '$lib/supabaseClient.js';
 
 	let { show = false } = $props();
 
@@ -40,13 +39,9 @@
 		message = '';
 
 		try {
-            const { data: { session } } = await supabase.auth.getSession();
 			const res = await fetch('/api', {
 				method: 'POST',
-				headers: { 
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${session.access_token}`
-                 },
+				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ username })
 			});
 
