@@ -39,7 +39,8 @@
 	// Non-secret config. AUTH_SECRET (the hashing pepper) must be set as a secret:
 	//   npx wrangler secret put AUTH_SECRET
 	"vars": {
-		"AUTH_FROM_EMAIL": "noreply@truth.dalt.dev"
+		"AUTH_FROM_EMAIL": "noreply@truth.dalt.dev",
+			"AUTH_FROM_NAME": "Dalton Auth"
 	}
 	/**
 	 * Smart Placement

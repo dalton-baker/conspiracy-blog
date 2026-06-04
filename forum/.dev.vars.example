@@ -5,3 +5,4 @@ AUTH_SECRET="change-me-to-a-long-random-string"
 
 # Optional override for the login email sender (defaults to wrangler.jsonc vars).
 # AUTH_FROM_EMAIL="noreply@truth.dalt.dev"
+# AUTH_FROM_NAME="Dalton Auth"
