@@ -26,7 +26,21 @@
 			"database_name": "conspiracy-forum",
 			"database_id": "bed1e905-71da-4a9b-8f35-4eeae65d2213"
 		}
-	]
+	],
+	// Cloudflare Email Service (Email Sending). Requires the sending domain to be
+	// onboarded under Email > Email Sending in the dashboard. With no
+	// allowed_sender_addresses set, env.EMAIL.send() can mail any recipient.
+	// https://developers.cloudflare.com/email-service/get-started/send-emails/
+	"send_email": [
+		{
+			"name": "EMAIL"
+		}
+	],
+	// Non-secret config. AUTH_SECRET (the hashing pepper) must be set as a secret:
+	//   npx wrangler secret put AUTH_SECRET
+	"vars": {
+		"AUTH_FROM_EMAIL": "noreply@truth.dalt.dev"
+	}
 	/**
 	 * Smart Placement
 	 * https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement

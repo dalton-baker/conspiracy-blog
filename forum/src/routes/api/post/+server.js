@@ -1,8 +1,8 @@
 import { json } from '@sveltejs/kit';
 import { getAuthenticatedEmail } from '$lib/serverAuth.js';
 
-export async function GET({ request, platform }) {
-    const email = await getAuthenticatedEmail(request);
+export async function GET({ cookies, platform }) {
+    const email = await getAuthenticatedEmail({ cookies, platform });
     if (!email) return new Response('Unauthorized', { status: 401 });
 
     const db = platform.env.FORUM_D1;
@@ -35,9 +35,9 @@ export async function GET({ request, platform }) {
     return json(result.results ?? []);
 }
 
-export async function POST({ request, platform }) {
+export async function POST({ request, cookies, platform }) {
     try {
-        const email = await getAuthenticatedEmail(request);
+        const email = await getAuthenticatedEmail({ cookies, platform });
         if (!email) return new Response('Unauthorized', { status: 401 });
 
         const db = platform.env.FORUM_D1;

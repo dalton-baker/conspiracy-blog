@@ -1,8 +1,6 @@
 <script>
 	import { onMount } from 'svelte';
-	import { goto } from '$app/navigation';
 	import { forumState } from './state.svelte.js';
-	import { supabase } from '$lib/supabaseClient.js';
 	import UsernameModal from './UsernameModal.svelte';
 	import AuthModal from './AuthModal.svelte';
 
@@ -14,27 +12,23 @@
 	let { children } = $props();
 	let showUsernameModal = $state(false);
 	let showLoginModal = $state(false);
-	let authSession = $state(null);
 
+	// The session lives in an httpOnly cookie sent automatically with each
+	// same-origin request, so we just ask the API who we are.
 	async function loadUserData() {
 		try {
-			const { data: { session } } = await supabase.auth.getSession();
-			authSession = session;
+			const res = await fetch('/api', { cache: 'no-store' });
 
-			const res = await fetch('/api', { 
-				cache: 'no-store',
-				headers: {
-					'Authorization': `Bearer ${session.access_token}`
-				}
-			});
-			
-			if (!res.ok) {
-				throw new Error(`HTTP ${res.status}`);
+			if (res.status === 401) {
+				showLoginModal = true;
+				return;
 			}
+			if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
 			const authData = await res.json();
 			if (!authData || !authData.id) throw new Error('Not authenticated');
 
+			showLoginModal = false;
 			forumState.userId = authData.id;
 			forumState.username = authData.username;
 
@@ -47,23 +41,17 @@
 		}
 	}
 
-	onMount(async () => {
-		const { data: { session } } = await supabase.auth.getSession();
-		console.log('Current session on mount:', session);
-
-		if (!session) {
-			showLoginModal = true;
-		}
-		else {
-			await loadUserData();
-		}
-	});
+	onMount(loadUserData);
 
 	async function handleLogout() {
-		await supabase.auth.signOut();
+		try {
+			await fetch('/api/auth/logout', { method: 'POST' });
+		} catch (err) {
+			console.error('Logout failed:', err);
+		}
 		forumState.userId = null;
 		forumState.username = null;
-		window.location.assign("https://truth.dalt.dev");
+		window.location.assign('https://truth.dalt.dev');
 	}
 </script>
 

@@ -8,7 +8,9 @@
 		"build": "vite build",
 		"preview": "npm run build && wrangler dev",
 		"prepare": "svelte-kit sync || echo ''",
-		"deploy": "npm run build && wrangler deploy"
+		"migrate": "wrangler d1 migrations apply conspiracy-forum --remote",
+		"migrate:local": "wrangler d1 migrations apply conspiracy-forum --local",
+		"deploy": "npm run migrate && wrangler deploy"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^7.0.0",
@@ -20,7 +22,6 @@
 		"wrangler": "^4.60.0"
 	},
 	"dependencies": {
-		"@supabase/supabase-js": "^2.95.1",
 		"bootstrap": "^5.3.8",
 		"dompurify": "^3.3.1",
 		"marked": "^17.0.1"

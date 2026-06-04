@@ -1,7 +1,6 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
 	import { Modal } from 'bootstrap';
-	import { supabase } from '$lib/supabaseClient.js';
 
 	let { show = false, onAuthenticated = null } = $props();
 
@@ -56,25 +55,36 @@
 		}, 1000);
 	}
 
+	async function parseError(res, fallback) {
+		try {
+			const data = await res.json();
+			return data?.message || fallback;
+		} catch {
+			return fallback;
+		}
+	}
+
 	async function sendOTP(isResend = false) {
 		sending = true;
 		error = '';
 		message = '';
 
 		try {
-			const { data, error: otpError } = await supabase.auth.signInWithOtp({
-				email: email.trim(),
-				options: {
-					shouldCreateUser: true
-				}
+			const res = await fetch('/api/auth/request', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ email: email.trim() })
 			});
 
-			if (otpError) throw otpError;
+			if (!res.ok) {
+				error = await parseError(res, 'Error sending code');
+				return;
+			}
 
 			message = isResend ? 'Code resent!' : 'Check your email for the verification code';
 			step = 'verify';
 			startCooldown();
-			
+
 			// Clear message after a few seconds
 			setTimeout(() => message = '', 3000);
 		} catch (err) {
@@ -90,13 +100,16 @@
 		message = '';
 
 		try {
-			const { data, error: verifyError } = await supabase.auth.verifyOtp({
-				email: email.trim(),
-				token: code.trim(),
-				type: 'email'
+			const res = await fetch('/api/auth/verify', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ email: email.trim(), code: code.trim() })
 			});
 
-			if (verifyError) throw verifyError;
+			if (!res.ok) {
+				error = await parseError(res, 'Invalid code');
+				return;
+			}
 
 			message = 'Authentication successful!';
 			setTimeout(() => {
