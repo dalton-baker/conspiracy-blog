@@ -97,9 +97,12 @@ export async function POST({ request, platform, getClientAddress }) {
         .bind(email, codeHash, ip, now, now + CODE_TTL_MS, windowStart, sendCount)
         .run();
 
-    // Send the email.
+    // Send the email. A named "from" (e.g. "Dalton Auth <noreply@...>") makes
+    // clients show a friendlier sender than the bare address.
     const { subject, text, html } = buildLoginEmail(code);
-    const from = platform.env.AUTH_FROM_EMAIL || 'noreply@truth.dalt.dev';
+    const fromEmail = platform.env.AUTH_FROM_EMAIL || 'noreply@truth.dalt.dev';
+    const fromName = platform.env.AUTH_FROM_NAME || 'Dalton Auth';
+    const from = { email: fromEmail, name: fromName };
 
     try {
         await platform.env.EMAIL.send({ from, to: email, subject, text, html });
