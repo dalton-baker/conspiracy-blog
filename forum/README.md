@@ -50,18 +50,30 @@ The forum uses its own passwordless, email-code login (no third-party auth):
 Login codes and session tokens are only ever stored **hashed** in D1. Email is
 the link between a session and the existing `users` table.
 
+### Database migrations
+
+Schema lives in `migrations/`. `npm run deploy` applies pending migrations to
+the remote D1 **before** deploying, so deploys stay in sync automatically:
+
+```sh
+npm run deploy        # migrate (remote) -> build -> wrangler deploy
+npm run migrate       # apply migrations to remote only
+npm run migrate:local # apply migrations to the local dev DB
+```
+
+`0001_initial_migration.sql` is the base schema (users/posts/comments) and is
+already recorded as applied in production, so Wrangler skips it there; fresh or
+local databases get it before later migrations. `0002_auth.sql` adds the auth
+tables (`login_codes`, `sessions`).
+
 ### One-time setup
 
-1. **Database** — apply the auth migration:
-   ```sh
-   npx wrangler d1 migrations apply conspiracy-forum --remote
-   ```
-2. **Email Sending** — in the Cloudflare dashboard, onboard the sending domain
+1. **Email Sending** — in the Cloudflare dashboard, onboard the sending domain
    under **Email → Email Sending** (auto-creates SPF/DKIM/DMARC/MX records on a
    `cf-bounce` subdomain). The `from` address in `AUTH_FROM_EMAIL`
    (`noreply@truth.dalt.dev`) must live on that verified domain.
    See https://developers.cloudflare.com/email-service/get-started/send-emails/
-3. **Secret** — set the hashing pepper:
+2. **Secret** — set the hashing pepper:
    ```sh
    npx wrangler secret put AUTH_SECRET
    ```

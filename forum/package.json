@@ -8,7 +8,9 @@
 		"build": "vite build",
 		"preview": "npm run build && wrangler dev",
 		"prepare": "svelte-kit sync || echo ''",
-		"deploy": "npm run build && wrangler deploy"
+		"migrate": "wrangler d1 migrations apply conspiracy-forum --remote",
+		"migrate:local": "wrangler d1 migrations apply conspiracy-forum --local",
+		"deploy": "npm run migrate && npm run build && wrangler deploy"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^7.0.0",
