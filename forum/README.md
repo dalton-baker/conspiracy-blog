@@ -50,10 +50,10 @@ The forum uses its own passwordless, email-code login (no third-party auth):
 Login codes and session tokens are only ever stored **hashed** in D1. Email is
 the link between a session and the existing `users` table.
 
-Both `login_codes` and `sessions` self-clean: each login request purges
-`login_codes` rows older than the rate-limit window, and each successful login
-purges expired `sessions`. Rows are only created by login activity, so neither
-table grows unbounded — no cron job required.
+Neither table grows unbounded, with no cron job required: `login_codes` is keyed
+by email and upserted, so it holds **at most one row per person who has ever
+logged in** (the rate-limit counters live on that row). `sessions` is purged of
+expired rows opportunistically on each login and whenever a session is read.
 
 ### Database migrations
 

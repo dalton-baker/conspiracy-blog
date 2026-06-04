@@ -25,26 +25,21 @@ export async function POST({ request, platform, cookies }) {
         return json({ message: 'Enter the 6-digit code from your email' }, { status: 400 });
     }
 
-    // Most recent active (unconsumed) code for this email.
+    // One row per email. An empty code_hash means the code was already used.
     const row = await db
-        .prepare(
-            `SELECT id, code_hash, attempts, expires_at FROM login_codes
-             WHERE email = ? AND consumed = 0 ORDER BY created_at DESC LIMIT 1`
-        )
+        .prepare(`SELECT code_hash, attempts, expires_at FROM login_codes WHERE email = ?`)
         .bind(email)
         .first();
 
-    if (!row) {
+    if (!row || !row.code_hash) {
         return json({ message: 'Invalid or expired code. Request a new one.' }, { status: 400 });
     }
 
     if (row.expires_at < Date.now()) {
-        await db.prepare(`UPDATE login_codes SET consumed = 1 WHERE id = ?`).bind(row.id).run();
         return json({ message: 'That code expired. Request a new one.' }, { status: 400 });
     }
 
     if (row.attempts >= CODE_MAX_ATTEMPTS) {
-        await db.prepare(`UPDATE login_codes SET consumed = 1 WHERE id = ?`).bind(row.id).run();
         return json({ message: 'Too many attempts. Request a new code.' }, { status: 429 });
     }
 
@@ -52,10 +47,9 @@ export async function POST({ request, platform, cookies }) {
 
     if (codeHash !== row.code_hash) {
         const attempts = row.attempts + 1;
-        // Burn the code once the attempt ceiling is hit.
         await db
-            .prepare(`UPDATE login_codes SET attempts = ?, consumed = ? WHERE id = ?`)
-            .bind(attempts, attempts >= CODE_MAX_ATTEMPTS ? 1 : 0, row.id)
+            .prepare(`UPDATE login_codes SET attempts = ? WHERE email = ?`)
+            .bind(attempts, email)
             .run();
 
         const remaining = CODE_MAX_ATTEMPTS - attempts;
@@ -70,8 +64,9 @@ export async function POST({ request, platform, cookies }) {
         );
     }
 
-    // Success: consume the code and mint a session.
-    await db.prepare(`UPDATE login_codes SET consumed = 1 WHERE id = ?`).bind(row.id).run();
+    // Success: blank the code so it can't be replayed (single-use), while keeping
+    // the row so the per-email rate-limit counters persist.
+    await db.prepare(`UPDATE login_codes SET code_hash = '' WHERE email = ?`).bind(email).run();
 
     // Opportunistically purge expired sessions so that table stays bounded too.
     await db.prepare(`DELETE FROM sessions WHERE expires_at < ?`).bind(Date.now()).run();
