@@ -50,16 +50,24 @@ The forum uses its own passwordless, email-code login (no third-party auth):
 Login codes and session tokens are only ever stored **hashed** in D1. Email is
 the link between a session and the existing `users` table.
 
+Both `login_codes` and `sessions` self-clean: each login request purges
+`login_codes` rows older than the rate-limit window, and each successful login
+purges expired `sessions`. Rows are only created by login activity, so neither
+table grows unbounded — no cron job required.
+
 ### Database migrations
 
 Schema lives in `migrations/`. `npm run deploy` applies pending migrations to
 the remote D1 **before** deploying, so deploys stay in sync automatically:
 
 ```sh
-npm run deploy        # migrate (remote) -> build -> wrangler deploy
+npm run deploy        # apply remote migrations, then wrangler deploy
 npm run migrate       # apply migrations to remote only
 npm run migrate:local # apply migrations to the local dev DB
 ```
+
+> `deploy` intentionally does **not** build — Cloudflare Workers Builds runs the
+> build as a separate step. Run `npm run build` yourself if deploying manually.
 
 `0001_initial_migration.sql` is the base schema (users/posts/comments) and is
 already recorded as applied in production, so Wrangler skips it there; fresh or

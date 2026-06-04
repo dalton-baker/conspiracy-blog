@@ -73,6 +73,9 @@ export async function POST({ request, platform, cookies }) {
     // Success: consume the code and mint a session.
     await db.prepare(`UPDATE login_codes SET consumed = 1 WHERE id = ?`).bind(row.id).run();
 
+    // Opportunistically purge expired sessions so that table stays bounded too.
+    await db.prepare(`DELETE FROM sessions WHERE expires_at < ?`).bind(Date.now()).run();
+
     const token = await createSession(db, platform.env, email);
     cookies.set(SESSION_COOKIE, token, sessionCookieOptions());
 

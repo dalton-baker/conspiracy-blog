@@ -35,6 +35,12 @@ export async function POST({ request, platform, getClientAddress }) {
     const ip = clientIp(request, getClientAddress);
     const now = Date.now();
 
+    // --- Housekeeping -----------------------------------------------------
+    // A login_codes row is only useful within the rate-limit window (codes
+    // expire well before then), and rows are only ever created here, so this
+    // keeps the table bounded to ~1 hour of login activity — no cron needed.
+    await db.prepare(`DELETE FROM login_codes WHERE created_at < ?`).bind(now - HOUR_MS).run();
+
     // --- Rate limiting ----------------------------------------------------
     // Minimum gap between sends for a single email.
     const last = await db
