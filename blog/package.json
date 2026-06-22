@@ -21,7 +21,6 @@
 		"wrangler": "^4.60.0"
 	},
 	"dependencies": {
-		"bootstrap": "^5.3.8",
-		"marked": "^17.0.1"
+		"bootstrap": "^5.3.8"
 	}
 }
