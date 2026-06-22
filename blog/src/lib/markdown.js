@@ -1,16 +1,14 @@
 import { marked } from 'marked';
-import DOMPurify from 'dompurify';
 
 marked.use({
     breaks: false,
     gfm: true
 });
 
+// Article content is now hard-coded and authored in this repo, so it is trusted.
+// Rendering with marked alone keeps the markdown usable during static prerendering
+// (DOMPurify requires a browser DOM and isn't available at build time).
 export function renderMarkdown(text) {
     if (!text) return '';
-    const dirty = marked.parse(text);
-    const clean = DOMPurify.sanitize(dirty, {
-        ADD_ATTR: ['target', 'rel'],
-    });
-    return clean;
+    return marked.parse(text);
 }

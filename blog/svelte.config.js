@@ -9,8 +9,11 @@ const config = {
 		adapter: adapter({
 			pages: 'dist',
 			assets: 'dist',
-			fallback: 'index.html' // IMPORTANT for SPA routing
-		})
+			fallback: '404.html' // served for unknown routes on a fully prerendered site
+		}),
+		prerender: {
+			handleHttpError: 'fail'
+		}
 	}
 };
 
